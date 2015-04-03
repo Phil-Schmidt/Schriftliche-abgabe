@@ -1,0 +1,402 @@
+\documentclass[runningheads,a4paper]{llncs}
+\usepackage{amssymb}
+\usepackage{url}
+\usepackage{times}
+\usepackage{float}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{soul}  
+\usepackage{nameref}  
+\usepackage{amsbsy}  
+\usepackage{bezier}  
+\usepackage{colortbl}  
+\usepackage[leqno,fleqn]{amsmath}  
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{qtree}
+% deutsche Silbentrennung
+\usepackage[ngerman]{babel}
+% wegen deutschen Umlauten
+\usepackage[utf8]{inputenc}
+
+
+\setcounter{tocdepth}{3}
+\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+\noindent\keywordname\enspace\ignorespaces#1}
+
+\begin{document}
+\mainmatter
+
+\title{Description Logics}
+\subtitle{Proseminar - Logische Programmierung}
+\date{Wintersemester 2011/2012}
+
+\author{Phil Schmidt}
+
+\institute{
+Freie Universit\"at Berlin\\ Institut for Computer Science \\ AG Corporate Semantic Web \\
+K\"onigin-Luise-Str. 24/26, 14195 Berlin, Germany\\  philschmidt@inf.fu-berlin.de \\
+\url{http://www.inf.fu-berlin.de/ag-csw}
+}
+
+\maketitle
+\begin{abstract}
+Die folgende Seminararbeit wird einen grundlegende Einblick in die Verwendung von Description Logics bieten.  Im Verlauf dieser Seminararbeit werden wir uns zuerst mit der Motivation auseinander setzten, welche hinter der Entwicklung von Beschreibungslogiken steht und was Beschreibungslogiken eigentlich sind. Danach werden wir uns den syntaktischen und semantischen Aufbau der ABox und der TBox einer Beschreibungslogik $\cal{AL}$ anschauen und anschließend Erweiterungen dieser Sprache betrachten.
+
+\end{abstract}
+
+\keywords{Logische Programmierung, Logik, Seminararbeit, Description Logics}
+
+\section{Einleitung}
+
+Description Logics sind eine Mengenfamilie mathematischer Formalismen um Wissen einheitlich zu repräsentieren. Sie nutzen eine logikbasierte Syntax und sind eine Unterklasse der First-Order Logic, welche als alternative zur Wissensrepräsentation darstellt. Ein Wissensrepräsentationssystem wird dazu benötigt, intelligente Applikationen zu erzeugen. Unter intelligenten Applikationen sind Anwendungen oder Systeme zu verstehen, denen ein Nutzer eine Welt (Diskursuniversum) beschreibt und dabei Informationen über Individuen, sowie Regeln für das Schlussfolgern von Zusammenhängen verwendet. Alle weiteren Informationen sollen dann von dem System aus diesen Grundbausteinen geschlussfolgert und konstruiert werden können, wenn diese von einem Nutzer abgefragt werden.
+
+Beschreibungslogiken (Description Logics) unterscheiden dabei zwischen zwei wesentlichen Arten von Wissen und zwar Terminologien und Behauptungen.
+
+ Terminologien werden in der so genannten TBox (Terminology Box) definiert und beschreibt Eigenschaften, von uns Konzepte genannt, von Individuen unseres Diskursuniversums, sowie Beziehungen, von uns Rollen genannt, in welcher zwei Individuen des Diskursuniversums zu einander stehen können. 
+
+Behauptungen werden in der sogenannten ABox (Assertion Box) gestellt. Sie drücke aus, welche Individuen welche atomaren Eigenschaften haben und atomare Rollen erfüllen.
+
+
+
+\section{Motivation}
+
+Es gibt viele verschiedene Arten Wissen zu repräsentieren. In der Regel wird zwischen zwei verschiedenen Arten von Wissensrepräsentationssystemen unterschieden. Die eine Möglichkeit ein Wissensrepräsentationssystem zu konstruieren ist nicht logikbasiert. Nicht logikbasierte sind Systeme denen keine logische Basis zugrunde liegt.
+
+ Einige klassische Repräsentanten dieser Klasse währen zum Beispiel Produktionssystem (Production Systems), die ihre Informationen mit Hilfe von Produktionsregeln darstellen, Frames, die einem Karteisystem ähneln und Semantiknetzwerke (Semantic Networks), die Information über Eigenschaften von Individuen über Relationen in einem Graphen speichern. Dagegen steht die Klasse der logikbasierten Systeme mit Repräsentanten wie beispielsweise der Prädikatenlogik (First-Order Logik), die Wissen über die Quantifizierung mathematischer, logischer Ausdrücke formalisiert.
+
+Jeder dieser genannten Formalismen hat seine eigenen Vor- und Nachteile. Die hier gewählten Repräsentanten der Klasse der nicht logikbasierten Systeme, insbesondere Frames und Semantiknetzwerke, haben den Vorteil, dass sie für einen Menschen leicht zu verstehen sind, weil sie sich in der Art, wie Menschen im Alltag Wissen speichern und verarbeiten, stark ähneln, was sie für einen Menschen ausgesprochen komfortabel macht. Jedoch gilt das Gegenteil für Maschinen: Es ist nicht leicht, theoretisch die Algorithmen zu formalisieren, nach denen diese Systeme Wissen erschließen und demnach sind Implementierungen von gewisser Schwierigkeit.
+
+ Dieses Problem zeigt sich nicht bei logikbasierten Systemen, da unsere moderne Technologie ebenso auf Logik basiert, jedoch ist Prädikatenlogik nicht berechenbar, weshalb es sich nicht eignet, um als universelles Wissensrepräsentationssystem genutzt zu werden. Es muss eine Alternative gefunden werden und diese Alternative wird in Beschreibungslogiken gesucht.
+
+ Moderne Forschung im Bereich der Beschreibungslogik befasst sich hauptsächlich mit der Optimierung der Algorithmen zur Wissensfolgerung, da, auch wenn Beschreibungslogiken berechenbar sind, sind unsere heutigen Auswertungsalgorithmen nicht in der Lage, Ergebnisse garantiert in einem vernünftigen und damit nutzbaren Zeitfenster zu liefern.
+
+
+
+\section{Beschreibungslogiken}
+
+Beschreibungslogiken sind eine Familie aus formalen Sprachen, die genutzt werden, um Wissen zu repräsentieren, die jeweils eine Untermenge der Prädikatenlogik bilden. Sie gehören damit zu den logikbasierten Wissensrepräsentationssystemen. Damit eine Beschreibungslogik den Zweck erfüllt, für den wir sie entwickeln, muss sie entscheidbar sein. Um Wissen in einer  Beschreibungslogik darzustellen muss eine Domäne/Diskursuniversum definiert werden. Diese besteht aus Konzepten, Rollen und Individuen.
+
+Individuen sind als Instanzen von Objekten zu verstehen, die bestimmte Eigenschaften besitzen können. Wenn wir also in einer Domäne Objekte wie Menschen, Tiere, Städte oder ähnliche haben, dann wäre ein Mensch, ein Tier oder eine Stadt eine Individuum.
+
+Ein Konzept ist als ein Prädikat erster Ordnung zu interpretieren. Konzepte lassen sich auch alternativ als eine Eigenschaft auffassen die ein Individuum X besitzt, wobei über dieses quantifiziert werden kann. So sind zum Beispiel für die Beschreibung eines Stammbaums die Eigenschaften "X ist Elternteil" oder "X ist weiblich" Konzepte. Man spricht im Falle von "X ist Weiblich" von einem atomaren Konzept. Atomare Konzepte (unteilbare Konzepte) sind Konzepte, die nicht weiter zerlegbar sind. Ein Gegenbeispiel für ein nicht-atomares Konzept wäre zum Beispiel "X ist Mutter", wenn "X ist Elternteil" und  "X ist weiblich" bereits in der Domäne bestehende Konzepte sind, da X genau dann eine Mutter ist, wenn X ein Elternteil ist und weiblich ist.
+
+Ähnlich verhält es sich mit Rollen. Eine Rolle ist zu verstehen als ein Prädikat zweiten Grades. In unserem Beispiel des Stammbaums wäre ein Beispiel für eine Rolle "X ist ein Kind von Y". Auch hier wird zwischen atomaren und nicht atomaren Rollen unterschieden.
+
+Diese Informationen werden alle samt in der der Wissensbasis (Knowledge base) $K(T,A)$ beschrieben, wobei das $T$ für die TBox und das $A$ für die ABox steht.
+
+ In den beiden folgenden Abschnitten werden wir uns ansehen, wie man Konzepte und Rollen definiert (TBox), sowie wie man Individuen beschreibt (ABox).
+
+\section{Die ABox}
+
+In der ABox stehen Behauptungen, also Informationen über die Eigenschaften einzelne Individuen, beziehungsweise deren Zugehörigkeit zu bestimmten Konzepten und darüber, welche geordneten Paare $(X,Y)$ aus Individuen eine Rolle erfüllen.
+
+\subsection{Syntax}
+
+Um auszudrücken, dass ein Individuum $X$ das Konzept $C$ erfüllt, wird formal im Bereich der Beschreibungslogiken der folgende Ausdruck verwendet:
+
+	\begin{center}
+	$C(X)$
+	\end{center}
+
+Um auszudrücken, dass ein geordnetes Paar $(X,Y)$ aus Individuen die Rolle $R$ erfüllen, wird dagegen dieser Ausdruck verwendet:
+
+	\begin{center}
+	$R(X,Y)$
+	\end{center}
+
+\subsection{Semantik}
+
+Um diese Behauptungen mathematisch zu verstehen, müssen wir folgende Betrachtung vornehmen:
+
+Sei unser Diskursuniversum $\Delta$, dann gibt es eine Interpretationsfunktion \linebreak $\cdot^{\cal I}\,:\;\;\Delta \rightarrow \Delta^{\cal I}$, wobei $\Delta^{\cal I}$ als Menge aller Individuen, Konzepte und Rollen der von uns etablierten Diskursuniversums interpretiert werden kann. Die Interpretation eines Konzepts $C^{\cal I}$ stellt die Menge aller Individuen dar, die C erfüllen und die Interpretation einer Rolle $R^{\cal I}$ die Menge aller geordneten Paare aus Individuen, die die Rolle R erfüllen.
+
+Nach dieser Konstruktion einer Interpretationsfunktion lassen sich die Behauptungen $C(X)$ und $R(X,Y)$ folgendermaßen interpretieren:
+
+	\begin{center}
+	$C(X)\Rightarrow X\in C^{\cal I}$
+	\end{center}
+
+und
+
+	\begin{center}
+	$R(X,Y)\Rightarrow (X,Y)\in R^{\cal I}$
+	\end{center}
+
+Alternativ kann nach dieser Konstruktion die Behauptung über die Rolle auch als Definition einer Relation über die Menge $\Delta^{\cal I}$ aufgefasst werden, sodass gilt:
+
+
+	\begin{center}
+	$R(X,Y)\Leftrightarrow X \;R\;\; Y$
+	\end{center}
+
+Die ABox bildet nun  eine Menge aus Behauptungen, wobei nur die Behauptungen gesetzt werden müssen, die die Zugehörigkeit von Individuen zu atomaren Konzepten und atomaren Rollenbeschreiben. 
+
+Alle weiteren Informationen über die Zugehörigkeit von Individuen zu Interpretationsmengen von nicht atomaren Konzepten und Rollen müssen aus den Behauptungen der ABox und Definitionen der TBox erschließbar sein. 
+
+
+\section{Die TBox}
+
+Während die ABox dazu verwendet wird Zugehörigkeit zu überprüfen und im übertragenen Sinne als Datenbank, die alle unsere Individuen und ihre Zugehörigkeit zu atomaren Konzepten und Rollen enthält, aufgefasst werden kann, wird die TBox dazu verwendet, dem System Regeln zum Schlussfolgern  von Zusammenhängen  zu bieten.
+
+Dazu werden Definitionen von Konzepten und Rollen aufgenommen, die es dem System ermöglichen, die Abfrage auf ein höheres Konzept oder eine höhere Rolle auf atomare, in der ABox definierte Konzepte und/oder Rollen zurückzuführen.
+
+ Dafür benötigen wir eine Syntax für  Konstruktoren, welche es uns ermöglichen sollen, derartige Zusammenhänge zu definieren, in dem logische Gleichungen aufgestellt werden können.
+
+Die TBox ist eine Menge aus Definitionen. Eine Gleichung, deren linke Seite ein atomares Konzept ist, ist eine Definition. 
+
+Damit unsere TBox für Maschinen gut nutzbar ist, werden Einschränkungen gesetzt, in Bezug darauf, wie Definitionen gewählt werden dürfen.
+
+Die erste Einschränkung ist, dass die Definitionen eindeutig sind. Das heißt das selbe Konzept, beziehungsweise Rolle, darf nicht mehrfach definiert werden.
+
+Die Zweite ist, dass die Definitionen azyklisch seien müssen. Azyklisch heißt nicht rekursiv, sprich die rechte Seite darf nicht das Konzept oder die Rolle der linken Seite enthalten oder anders auf jenes Konzept oder jene Rolle verweisen. 
+
+Um unsere Definitionen mathematisch Formal zu beschreiben,  verwenden wir die im letzten Abschnitt verwendeten Schreibweisen, wie $\Delta$ für unser Diskursuniversum, sowie $\cdot^{\cal I}$ für unsere Interpretationsfunktion.
+
+
+
+\subsection{Syntax}
+
+Eine Gleichung hat die Form $C\equiv D$.
+
+Es gibt verschieden Sprachen, die sich als Beschreibungslogik auffassen lassen, mit unterschiedlichen Syntaxen  und unterschiedlicher Mächtigkeit. In diesem Abschnitt wollen wir uns mit der Syntax einer Beschreibungslogik $\cal AL$ (Attributive Language oder Basissprache) befassen.
+
+In der Sprache $\cal AL$ existieren die folgenden Konstruktoren, welche es ermöglichen, neue Gleichungen zu erzeugen. Diese Konstruktoren sind
+
+	\begin{center}
+	$C \rightarrow A $ \\
+	$C\rightarrow\top $ \\
+	$C \rightarrow\bot $ \\
+	$C \rightarrow\neg A$ \\
+	$C,D \rightarrow C\sqcap D$ \\
+	$C \rightarrow\forall R.C$ \\
+	$C \rightarrow\exists R.\top$ \\
+	\end{center}
+
+wobei $C$ und $D$ Konzepte sind, $A$ ein atomares Konzept ist, $\neg A$ die Negation eines atomaren Konzeptes ist, $\top$ Top ist, $\bot$ Bottom ist, $C\sqcap D$ die logische Konjunktion von $C$ und $D$ ist (sprich "$C$ und $D$") und $\forall$ und $\exists$  Allquantor und Existenzquantor, bekannt aus der Prädikatenlogik, sind.
+
+
+\subsection{Semantik}
+
+\begin{itemize}
+	\item[] Äquivalenz wird interpretiert als:
+		\begin{center}
+		$C\equiv D\;\Leftrightarrow C^{\cal I}=D^{\cal I}$
+		\end{center}
+	\item[] Ein atomares Konzept wird interpretiert als die Menge aller Individuen, die dieses Konzept erfüllen, also:
+		\begin{center}
+		 $A^{\cal I}\subseteq \Delta^{\cal I}$
+		\end{center}
+	\item[] Eine atomare Rolle wird interpretiert als die Menge aller geordneten Tupel aus Individuen, die diese Rolle erfüllen:
+		\begin{center}
+		  $R^{\cal I}\subseteq \Delta^{\cal I}\times \Delta^{\cal I}$
+		\end{center}
+	\item[] Top wird interpretiert als:
+		\begin{center}
+		$\top^{\cal I}=\Delta^{\cal I}$
+		\end{center}
+	\item[] Bottom wird interpretiert als:
+		\begin{center}
+		$\bot^{\cal I}=\emptyset$
+		\end{center}
+	\item[] Negation wird interpretiert als:
+		\begin{center}
+		$(\neg A)^{\cal I} = \Delta^{\cal I}\setminus A^{\cal I}$
+		\end{center}
+	\item[] Konjunktion wird interpretiert als:
+		\begin{center}
+		$ (C \sqcap D)^{\cal I}=C^{\cal I}\cap D^{\cal I}  $
+		\end{center}
+	\item[] Allquantifizierung wird interpretiert als:
+		\begin{center}
+		$(\forall R.C)^{\cal I}=\left\{a\in \Delta^{\cal I}\;|\;\forall b.\,(a,b)\in R^{\cal I}\rightarrow b\in C^{\cal I}\right\}$
+		\end{center}
+	\item[] und Existenzquantifizierung über Top wird interpretiert als:
+		\begin{center}
+		$(\exists R.\top)^{\cal I}=\left\{a\in \Delta^{\cal I}\;|\;\exists b.\,(a,b)\in R^{\cal I}\right\}$
+		\end{center}
+\end{itemize}
+
+Wichtige Bemerkung: $\cal AL$ erlaubt nur die Negation von atomaren Konzepten und nur die Existenzquantifizierung über die gesamte Domäne, nicht über Teilmengen der Interpretationsdomäne.
+
+Wenn wir diese Konstruktoren verwenden wollen, dann benötigen wir Erweiterungen (Extensions) der Sprache $\cal AL$, die uns zum Beispiel  die Negation von nicht atomaren Konzepten oder Existenzquantifizierung über eine Teilmenge der Interpretationsdomäne ermöglichen und damit mehr erlauben.
+
+Mit derartigen Erweiterungen werden wir uns im nächsten Abschnitt befassen.
+
+\section{Extensions}
+
+Es ist möglich, die Sprache $\cal AL$ um weitere Konstruktoren zu erweitern. In diesem Abschnitt werden wir uns mit den 4 üblichsten dieser Extensions befassen.
+
+\subsection{$\cal U$-Extention}
+
+Die $\cal U$-Extension erweitert die Sprache um logische Disjunktion, die folgendermaßen definiert wird:
+
+	\begin{center}
+	$(C\sqcup D)^{\cal I}=C^{\cal I}\cup D^{\cal I} $
+	\end{center}
+
+sprich "C und D". 
+
+\subsection{$\cal E$-Extension}
+
+Die $\cal E$-Extention erweitert die Sprache um Existenzquantifizierung über ein Konzept ungleich Top:
+
+	\begin{center}
+	$(\exists R.C)^{\cal I}=\left\{a\in \Delta^{\cal I}\;|\;\exists b.\,(a,b)\in R^{\cal I}\wedge b\in C^{\cal I}\right\}$ 
+	\end{center}
+
+
+\subsection{$\cal C$-Extension}
+
+Die $\cal C$-Extension erweitert die Sprache um die Negation nicht atomarer  Konzepte:
+
+	\begin{center}
+	 $(\neg C)^{\cal I}=\Delta^{\cal I}\setminus C^{\cal I} $
+	\end{center}
+
+
+
+\subsection{$\cal N$-Extension}
+
+Die $\cal N$-Extension erweitert die Sprache um Abzählkonstruktoren, die es erlauben zu überprüfen, ob mehr oder weniger als eine Zahl $n$ Individuen $b$ gibt, die in Relation zu einem Individuum $a$ stehen ($a\; R\; b$):
+
+	\begin{center}
+	$(\geqslant n\, R)^{\cal I}=\left\{a\in \Delta^{\cal I}\;|\; | \left\{ b\;|\;(a,b)\in R^{\cal I}\right\}| \geq n \right\} $ 
+	$(\leqslant n\, R)^{\cal I}=\left\{a\in \Delta^{\cal I}\;|\; | \left\{ b\;|\;(a,b)\in R^{\cal I}\right\}| \leq n \right\} $ 
+	\end{center}
+
+\vspace{0.5cm}
+
+Um eine Sprache zu beschreiben, die sich durch Erweiterungen von  $\cal AL$ erzeugen lässt, schreibt man $\cal AL[U][E][N][C]$.
+
+Bemerkung: Die Erweiterungen $\cal UE$ und $\cal C$ sind gleichmächtig. Das liegt daran, dass sich Disjunktion, sowie die allgemeine Existenzquantifizierung mit Hilfe von allgemeiner Negation, Konjunktion und Allquantifizierung darstellen lässt:
+
+	\begin{center}
+		$C\sqcup D\equiv \neg(\neg C \sqcap \neg D)$ 
+
+		$\exists R.C \equiv \neg \forall R.\neg C$
+	\end{center}
+ 
+Im allgemeinen wird deshalb $\cal C$ anstelle von $\cal UE$ verwendet.
+
+
+\section{Beispiel: Stammbaum}
+
+Dieser Abschnitt soll ein ausführliches Beispiel bieten indem schrittweise ein Stammbaum von üblicher Diagrammschreibweise in eine Knowledge Base transformiert wird:
+
+\vspace{0.5 cm}
+
+\Tree [.{Arne \& Maria} {Markus} {Anna} {Lukas}  ]
+\Tree [.{Frank \& Hilde} {Mia}  ] 
+
+\vspace{1 cm}
+
+\hspace{1 cm}
+\Tree [.{Lukas \& Mia} {Dieter} {Berthold}  ]
+
+\vspace{1 cm}
+
+Wir wollen in der Lage sein, Informationen über Verwandtschaft und Geschlecht mit Hilfe unserer Wissensbasis auszudrücken.
+
+Wie wir wissen besteht eine Knowledge base K aus einer ABox und einer TBox. Wir werden damit beginnen die ABox zu definieren und uns anschließend die TBox ansehen:
+
+\subsection{Die Erstellung einer ABox}
+
+Bei der Erstellung der ABox beschreiben wir das Diskursuniversum.
+
+Als erstes wollen wir ein Konzept "Person" aufnehmen, damit wir überprüfen können, ob jemand wirklich ein Mensch ist. Das heißt wir schreiben in unsere ABox alle Menschen, die in unserem Universum existieren:
+	\begin{itemize}
+	\item[] Person(Arne)
+	\item[] Person(Maria)
+	\item[] Person(Markus)
+	\item[] Person(Anna)
+	\item[] Person(Lukas)
+	\item[] Person(Frank)
+	\item[] Person(Hilde)
+	\item[] Person(Mia)
+	\item[] Person(Dieter)
+	\item[] Person(Berthold)
+	\end{itemize}
+Als nächstes beschreiben wir Geschlechter. Wir tun das, in dem wir ein Geschlecht wählen und alle Individuen diese Geschlechts in die ABox aufnehmen:
+	\begin{itemize}
+	\item[] Female(Maria)
+	\item[] Female(Anna)
+	\item[] Female(Hilde)
+	\item[] Female(Mia)
+	\end{itemize}
+Als letztes müssen wir die Rolle hasChild beschreiben:
+	\begin{itemize}
+	\item[] hasChild(Arne, Markus)
+	\item[] hasChild(Arne, Anna)
+	\item[] hasChild(Arne, Lukas)
+	\item[] hasChild(Maria, Markus)
+	\item[] hasChild(Maria, Anna)
+	\item[] hasChild(Maria, Lukas)
+	\item[] hasChild(Frank, Mia)
+	\item[] hasChild(Hilde, Mia)
+	\item[] hasChild(Lukas, Dieter)
+	\item[] hasChild(Lukas, Berthold)
+	\item[] hasChild(Mia, Dieter)
+	\item[] hasChild(Mia, Berthold)
+	\end{itemize}
+
+Damit sind alle grundlegenden, atomaren Rollen und Konzepte erklärt. Weiteres Wissen kann nun über Definitionen in der TBox gefolgert werden, welche wir im folgenden Unterabschnitt erzeugen werden. 
+
+\subsection{Die Erstellung einer TBox}
+
+Bei der Erstellung der TBox definieren wir Regeln, nach denen Zusammenhänge geschlossen werden können.
+
+Wir beginnen damit, das Konzept Male  zu definieren:
+	\begin{center}
+	$Male\equiv \neg Female$
+	\end{center}
+Als nächstes definieren wir das Konzept Parent:
+	\begin{center}
+	$Parent\equiv \exists hasChild.Person $
+	\end{center}
+Bemerkung: Für diese Definition ist die Extension $\cal E$ notwendig. Alternativ könnte die Definition 
+	\begin{center}
+	$Parent\equiv \exists hasChild.\top $
+	\end{center}
+genutzt werden, jedoch haben wir uns entschieden, die Unterscheidung zwischen Mensch und nicht Mensch in unser Diskursuniversum aufzunehmen. Es ist lediglich Zufall, dass in unserem Beispiel $\Delta^{\cal I}$ und $Person^{\cal I}$ äquivalent sind. Wenn wir das Universum um zum Beispiel Haustiere erweitern wollen, dann ist die genannte Alternative nicht mehr hinreichend, weil dann auch alle Tiere mit Kindern Parents währen.
+
+Des Weiteren lassen sich wie Mutter,  Vater oder Großmutter definieren:
+	\begin{center}
+	$Mother\equiv Female\sqcap Parent $\\
+	$Father\equiv Male\sqcap Parent $\\
+ 	$Grandmother \equiv Female \sqcap Person \sqcap  \exists hasChild.Parent$ 
+	\end{center}
+
+Wie zusehen ist, lässt sich TBox von hier aus beliebig erweitern und zwar mit allen möglichen Konzepten wie zum Beispiel
+	\begin{center}
+ 	$Person\sqcap Female \sqcap  \geqslant 2 \,hasChild.Person $,
+	\end{center}
+ was alle Mütter mit zwei oder mehr Kindern beschreibt, in unserem expliziten Beispiel sind das Maria und Mia.
+
+
+
+\section{Zusammenfassung}
+
+
+Beschreibungslogiken sind eine Familie aus mathematisch formalen Sprachen, welche entwickelt wurden, um universell und effektiv Wissen in sogenannten Wissensbasen zu notieren. Eine Wissensbasis  besteht aus einer ABox, die direkte Beschreibungen von Individuen des Diskursuniversums beinhaltet und einer TBox, welche Terminologie zur Schlussfolgerung von Wissen bietet. Die Grundbausteine zur Informationserschließung sind Rollen und Konzepte.
+
+Wenn man das Diskursuniversum mithilfe einer Interpretationsfunktion auf eine Menge abbildet, so lassen sich die Einträge folgendermaßen beschreiben:
+
+Wenn die Abbildung eines Konzeptes $C$ das Individuum $X$ enthält, dann wird $C(X)$ als Eintrag in die ABox aufgenommen. 
+
+Wenn die Projektionen zweier Individuen $C,D$ in Relation R stehen, so spricht man davon, dass $(C,D)$ die Rolle $R$ erfüllt. Dann wird der Eintrag $R(C,D)$ in die ABox aufgenommen.
+
+In die TBox werden Definitionen aufgenommen, die es erlauben, dass neues Wissen aus der ABox geschlussfolgert werden kann. Definitionen sind logische Äquivalenzgleichungen und können mit verschiedenen Operatoren verknüpft werden.
+
+ Die Projektionen der Basissprache $\cal AL$ sind abgeschlossen nach Durchschnittsbildung, Negation von atomaren Konzepten Allquantifizierung und Existenzquantifizierung über die gesamte Diskursdimension. Die Sprache $\cal AL$ lässt sich noch um weitere Operationen erweitern, wie allgemeine Existenzquantifizierung, allgemeine Komplementbildung, Vereinigung oder Abzählung.
+
+
+
+\section{Literatur}
+		\begin{itemize}
+		\item[1.] Description Logics Handbook by Daniele Nardi und Ronald J. Brachman
+		\item[2.] Description Logic: EL \& ALC by Boris Konev
+		\end{itemize}
+
+\end{document}

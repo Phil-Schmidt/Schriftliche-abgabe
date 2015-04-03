@@ -1,0 +1,13 @@
+\begin{thebibliography}{1}
+
+\bibitem{Genesereth:1985:LP:4284.4287}
+Michael~R. Genesereth and Matthew~L. Ginsberg.
+\newblock Logic programming.
+\newblock {\em Commun. ACM}, 28:933--941, September 1985.
+
+\bibitem{Sakama:2008:CAS:1342991.1342993}
+Chiaki Sakama and Katsumi Inoue.
+\newblock Coordination in answer set programming.
+\newblock {\em ACM Trans. Comput. Logic}, 9:9:1--9:30, April 2008.
+
+\end{thebibliography}
