@@ -74,7 +74,17 @@ Die Molekularbewegung wird durch eine Umgebungsfunktion namentlich 'Mutator' umg
 
 Die benötigte Gütefunktion, die jedem 'State' einen Double-Wert zuweist und für jede Metaheuristik notwendig ist, ist als Quantifizierung des durch das Annealing zu erzielenden Effekts zu interpretieren.
 
-Die Unberechenbarkeit des Materials, beziehungsweise das chaotische Verhalten der Teilchen, lässt sich durch die Temperatur messen. In unserer Simulation Wird eine CoolingSchedule-Klasse verwendet, die nach beliebig wählbaren Abkühlmustern, wie zum Beispiel logarithmisches oder lineares Abkühlen, nach jedem abfragen einer T()-Funktion eine neue Temperatur zurückgibt.
+Die Unberechenbarkeit des Materials, beziehungsweise das chaotische Verhalten der Teilchen, lässt sich durch die Temperatur messen. In unserer Simulation wird eine CoolingSchedule-Klasse verwendet, die nach beliebig wählbaren Abkühlmustern, wie zum Beispiel logarithmisches oder lineares Abkühlen, nach jedem Abfragen einer T()-Funktion eine neue Temperatur zurückgibt.
+
+\subsection{Ablauf}
+
+Simulated Annealing ist ein iteratives Verfahren. Wir nutzen zwei Zeiger; einen, der auf das aktuell beste gefundene Ergebnis zeigt ('best'), und einen, der den aktuellen Ist-Zustand der Domäne speichert ('current'). In jeder Iteration wird ein Neuer State in der Umgebung des aktuellen States mithilfe des Mutators generiert.
+
+Anschließend wird die Objective Function dazu genutzt, den neuen State zu bewerten und mit den alten States zu vergleichen. Ist ein neues globales Optimum gefunden worden, wird dieses gespeichert (best).
+
+Für die Bestimmung des neuen current-Zustandes wird eine zufällige Zahl zwischen 0 und der Maximaltemperatur generiert. Im Normalfall nimmt current den nach Gütefunktion besseren State an, es sei denn es wird ein kleinerer Wert, als die aktuelle Temperatur gewürfelt. Dann nimmt current den schlechteren der beiden Werte an.
+
+Dieser Prozess wird solange fortgeführt, bis entweder eine feste Iterationsanzahl erreicht ist, oder die Lösung 'gut'-genug ist. Unsere Implementierung terminiert einfach nach einer Festen Schrittzahl.
 
 \section{Genetische Heuristik}
 

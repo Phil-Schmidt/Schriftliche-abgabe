@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.4.19)  4 APR 2015 20:48
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.4.19)  4 APR 2015 22:42
 entering extended mode
 **C:/Users/Phil/Documents/GitHub/Schriftliche-abgabe/Abgabe/seminararbeit.tex
 (C:/Users/Phil/Documents/GitHub/Schriftliche-abgabe/Abgabe/seminararbeit.tex
@@ -780,7 +780,7 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10> not available
  [1
 
 
-{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2]
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2] [3]
 (C:\Users\Phil\Documents\GitHub\Schriftliche-abgabe\Abgabe\seminararbeit.aux) )
  
 Here is how much of TeX's memory you used:
@@ -790,14 +790,14 @@ Here is how much of TeX's memory you used:
  8910 multiletter control sequences out of 15000+200000
  30082 words of font info for 52 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 42i,6n,32p,686b,365s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,7n,32p,686b,365s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Program Files/
 MiKTeX 2.9/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX 2.9/font
 s/type1/urw/times/utmb8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/urw/times
 /utmr8a.pfb>
-Output written on seminararbeit.pdf (2 pages, 49140 bytes).
+Output written on seminararbeit.pdf (3 pages, 50910 bytes).
 PDF statistics:
- 22 PDF objects out of 1000 (max. 8388607)
+ 25 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
