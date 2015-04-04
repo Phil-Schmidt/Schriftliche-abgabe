@@ -68,7 +68,13 @@ Wie der Name uns sagt, ist die Herangehensweise beim Simulated Annealing nun so,
 
 \subsection{Simulation}
 
+Das zu behandelnde Metall wird in unserer Implementierung durch einen generischen Typ-Parameter namens 'State' realisiert. Bei der Anwendung auf die uns gegebene Problemstellung, wie zum Beispiel Stapeln, ist dies ein Feld aus Polygonen.
 
+Die Molekularbewegung wird durch eine Umgebungsfunktion namentlich 'Mutator' umgesetzt. Eine Umgebungsfunktion Bekommt einen 'State' als Input und gibt einen anderen 'State' zurück, der in der 'Nachbarschaft' des Eingabe-States befindet.
+
+Die benötigte Gütefunktion, die jedem 'State' einen Double-Wert zuweist und für jede Metaheuristik notwendig ist, ist als Quantifizierung des durch das Annealing zu erzielenden Effekts zu interpretieren.
+
+Die Unberechenbarkeit des Materials, beziehungsweise das chaotische Verhalten der Teilchen, lässt sich durch die Temperatur messen. In unserer Simulation Wird eine CoolingSchedule-Klasse verwendet, die nach beliebig wählbaren Abkühlmustern, wie zum Beispiel logarithmisches oder lineares Abkühlen, nach jedem abfragen einer T()-Funktion eine neue Temperatur zurückgibt.
 
 \section{Genetische Heuristik}
 
