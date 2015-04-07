@@ -88,6 +88,24 @@ Dieser Prozess wird solange fortgeführt, bis entweder eine feste Iterationsanza
 
 \section{Genetische Heuristik}
 
+\subsection{Inspiration}
+
+Ähnlich wie beim Simulated Annealing gibt es für den folgenden genetischen Algorithmus Inspiration durch einen real-weltlichen Prozess. In diesem Fall ist es das biologische Konzept der Evolution.
+
+Evolution wird ein biologischer Prozess genannt, der optimale Adaption von Lebensformen an einen bestimmten Lebensraum über mehrere Generationen erlaubt. Dieser Prozess lässt sich in verschiedene Iterationen (Generationen) aufteilen. Jede Iteration kennt verschiedene Phasen, die sie durchläuft, die den Evolutionsvorgang ausmachen:
+
+\begin{description}
+	\item[Natürliche Selektion] \hfill \\ Das Ökosystem um eine Population herum übt einen so genanten Selektionsdruck auf die darin lebenden Organismen aus. Lebensformen, die nicht bestimmten Ansprüchen genügen, werden aus dem Genpool eliminiert.
+
+	\item[Rekombination] \hfill \\ Durch sexuelle Fortpflanzung wird es zwei genetisch "fit"-en Organismen ermöglicht, ihre Gene untereinander auszutauschen. In der nächsten Generation werden ihre Nachkommen eine zufällige Auswahl an Genen ihrer beiden Elternteile tragen.
+
+	\item[Mutation] \hfill \\ Im Vorgang der Gen-Rekombination kann es vorkommen, dass Reproduktions-Fehler auftreten. Die Folge davon ist, dass die nachkommen Gen-Eigenschaften haben können, die nicht Teil des ursprünglichen Genpools der Elterngeneration waren. Diese Mutationen treten zufällig auf und haben ebenso willkürliche Auswirkungen.
+\end{description}
+
+Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft diese Generation erneut den selben Prozess. Dabei verbessert sich langfristig das Gen-Material in Bezug auf den Selektionsdruck des bestehenden Ökosystems. Der folgende Algorithmus versucht sich daran,  ein derartiges Ökosystem mit verschiedenen Populationen zu simulieren, um einen ähnlichen Optimierungsprozess zu erzielen.
+
+\subsection{Simulation}
+
 \section{Branch and Bound}
 
 \section{Nicht-lineare Optimierung mit numerischen Verfahren des Stapelproblems}
