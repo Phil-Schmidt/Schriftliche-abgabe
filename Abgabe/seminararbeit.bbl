@@ -25,4 +25,9 @@
 A.~S. Lewis and M.~L. Overton, ``Nonsmooth optimization via quasi-newton
   methods,'' \emph{Math. Program.}, vol. 141, no. 1-2, pp. 135--163, 2013.
 
+\bibitem{nocedal1999numerical}
+J.~Nocedal and S.~Wright, \emph{Numerical Optimization}, ser. Springer Series
+  in Operations Research.\hskip 1em plus 0.5em minus 0.4em\relax Springer,
+  1999.
+
 \end{thebibliography}
