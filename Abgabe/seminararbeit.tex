@@ -113,13 +113,13 @@ Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft 
 
 \subsection{Formulierung als nicht-lineares Optimierungsproblem}
 \label{formObjStacking}
-Das Stapelproblem lässt sich als optimierungs Problem einer nicht-linearen Zielfunktion ohne Nebenbedingungen formulieren. Die Zielfunktion $f: \mathbb{R}^n \rightarrow \mathbb{R}$ erhält die Translations-Vektoren und die Rotations-Winkel für jedes der gegebenen Polygone als Eingabe und Ordnet diesen die Fläche der konvexen Hülle bzw. der Bounding-Box zu. Im zweidimensionalen sind das also drei Parameter für jedes Polygon.
+Das Stapelproblem lässt sich als Optimierungsproblem einer nicht-linearen Zielfunktion ohne Nebenbedingungen formulieren. Die Zielfunktion $f: \mathbb{R}^n \rightarrow \mathbb{R}$ erhält die Translations-Vektoren und die Rotationswinkel für jedes der gegebenen Polygone als Eingabe und ordnet diesen die Fläche der konvexen Hülle, bzw. der Bounding-Box, zu. Im zweidimensionalen sind das also drei Parameter für jedes Polygon.
 
 \subsection{Lösungs-Verfahren}
 
 \subsubsection{Newton-Verfahren}
 
-Für derartige optimierungs Probleme gibt es verschiedene mathematische Verfahren zur numerischen Berechnung lokaler Optima. Viele dieser Verfahren basieren auf dem Newton-Verfahren zum finden von Nullstellen einer Funktion. Um das Newton-Verfahren zur optimierung einzusetzen wendet man es auf die erste Ableitung $f'$ an. Wenn die Lösung dann zu einer Nullstelle konvergiert ist, ist die erste Ableitung null und damit ein Extrempunkt erreicht. Allerdings benötigt das Newton-Verfahren auch noch die erste Ableitung der Funktion auf die es angewendet wird, deshalb wird auch noch die zweite Ableitung $f''$ benötigt, wenn man das Newton-Verfahren zur optimierung verwendet.
+Für derartige Optimierungsprobleme gibt es verschiedene mathematische Verfahren zur numerischen Berechnung lokaler Optima. Viele dieser Verfahren basieren auf dem Newton-Verfahren zum finden von Nullstellen einer Funktion. Um das Newton-Verfahren zur Optimierung einzusetzen, wendet man es auf die erste Ableitung $f'$ an. Wenn die Lösung dann zu einer Nullstelle konvergiert ist, ist die erste Ableitung null und damit ein Extrempunkt erreicht. Allerdings benötigt das Newton-Verfahren auch noch die erste Ableitung der Funktion auf die es angewendet wird, deshalb wird auch noch die zweite Ableitung $f''$ benötigt, wenn man das Newton-Verfahren zur Optimierung verwendet.
 
 Das Verfahren berechnet die Lösung iterativ. Eine gegebene Lösung $x_n$ wird in jedem Schritt mit der Formel
 \begin{equation*}
@@ -127,7 +127,7 @@ x_{n+1} = x_n - \frac{f'(x_n)}{f''(x_n)}
 \end{equation*}
 weiter der optimalen Lösung angenähert.
 
-Bei der minimierung der Funktion aus \ref{formObjStacking} ist die erste Ableitung eine vektorwertige Funktion die einen Vektor mit partiellen Ableitungen, den Gradienten, zurückgibt $f': \mathbb{R}^n \rightarrow \mathbb{R}^n$ und die zweite Ableitung gibt dann sogar eine $n\times n$-Matrix, die Hesse-Matrix, zurück, nämlich die partielle Ableitung nach jedem der $n$ Eingabeparameter für jede der $n$ Komponenten des Ausgabevektors der ersten Ableitung $f'': \mathbb{R}^n \rightarrow \mathbb{R}^{n\times n}$. Diese Matrix wird Hesse-Matrix genannt.
+Bei der Minimierung der Funktion aus \ref{formObjStacking} ist die erste Ableitung eine vektorwertige Funktion, die einen Vektor mit partiellen Ableitungen, den Gradienten, zurückgibt $f': \mathbb{R}^n \rightarrow \mathbb{R}^n$ und die zweite Ableitung gibt dann sogar eine $n\times n$-Matrix zurück, nämlich die partielle Ableitung nach jedem der $n$ Eingabeparameter für jede der $n$ Komponenten des Ausgabevektors der ersten Ableitung $f'': \mathbb{R}^n \rightarrow \mathbb{R}^{n\times n}$. Diese Matrix wird Hesse-Matrix genannt.
 
 Um das Newton Verfahren für vektorwertige Funktionen einzusetzen wird die Formel zu
 \begin{equation*}
@@ -137,11 +137,11 @@ Dabei ist $H := f''(x_n)$ die Hesse-Matrix und $g := f'(x_n)$ der Gradient.
 
 \subsubsection{Ableitungen}
 
-Da wir in der Implementierung der Zielfunktion \ref{formObjStacking} die Ableitungen nicht gegeben haben, müssen wir sie numerisch Berechnen. Mit der Finite-Differenzen-Methode benötigt die Berechnung der ersten Ableitung zwei Funktionsauswertungen pro Komponente also insgesamt $2n$ Funktionsauswertungen. Würde man nun die zweite Ableitung ebenfalls numerisch Berechnen bräuchte man $2n$ Funktionsaufrufe der ersten Ableitung, also insgesamt $4n^2$ Funktionsaufrufe. Das ist nicht nur sehr aufwendig, sondern auch Problematisch für die numerische Stabilität des Verfahrens. Denn die Finite-Differenzen-Methode führt leicht zu Auslöschungen, die bei der Substraktion fast gleich großer Gleitkommazahlen auftreten.
+Da wir in der Implementierung der Zielfunktion \ref{formObjStacking} die Ableitungen nicht gegeben haben, müssen wir sie numerisch Berechnen. Mit der Finite-Differenzen-Methode benötigt die Berechnung der ersten Ableitung zwei Funktionsauswertungen pro Komponente also insgesamt $2n$ Funktionsauswertungen. Würde man nun die zweite Ableitung ebenfalls numerisch berechnen, bräuchte man $2n$ Funktionsaufrufe der ersten Ableitung, also insgesamt $4n^2$ Funktionsaufrufe. Das ist nicht nur sehr aufwendig, sondern auch problematisch für die numerische Stabilität des Verfahrens. Denn die Finite-Differenzen-Methode führt leicht zu Auslöschungen, die bei der Subtraktion fast gleich großer Gleitkommazahlen auftreten lässt.
 
-Ausserdem ist die Ableitung der Zielfunktion für das Stapelproblem nicht glatt, denn wenn ein Polygon sich komplett innerhalb der konvexen Hülle befindet, ist die Ableitung bezüglich dessen Translations- und Rotationsparameter null. Sobald das Polygon jedoch so weit verschoben wird, dass es den Rand erreicht, wird die Ableitung positiv, hat also an dieser Stelle einen knick und die zweite Ableitung ist somit nicht stetig. Beweise für die Konvergenzeigenschaften von Newton-artigen Verfahren setzten jedoch zweimal stetig differenzierbare Funktionen vorraus.
+Außerdem ist die Ableitung der Zielfunktion für das Stapelproblem nicht glatt, denn wenn ein Polygon sich komplett innerhalb der konvexen Hülle befindet, ist die Ableitung bezüglich dessen Translations- und Rotationsparameter null. Sobald das Polygon jedoch so weit verschoben wird, dass es den Rand erreicht, wird die Ableitung positiv, hat also an dieser Stelle einen knick und die zweite Ableitung ist somit nicht stetig. Beweise für die Konvergenzeigenschaften von Newton-artigen Verfahren setzten jedoch zweimal stetig differenzierbare Funktionen voraus.
 
-In der Praxis hat sich jedoch gezeigt, dass es Newton-artige Verfahren zur optimierung gibt, die gut für nicht glatte Funktionen funktionieren \cite{DBLP:journals/mp/LewisO13} und ohne zweite Ableitungen auskommen.
+In der Praxis hat sich jedoch gezeigt, dass es Newton-artige Verfahren zur Optimierung gibt, die gut für nicht glatte Funktionen funktionieren \cite{DBLP:journals/mp/LewisO13} und ohne zweite Ableitungen auskommen.
 
 \subsubsection{Quasi-Newton Verfahren}
 
