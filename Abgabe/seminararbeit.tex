@@ -101,7 +101,7 @@ Evolution wird ein biologischer Prozess genannt, der optimale Adaption von Leben
 \begin{description}
 	\item[Natürliche Selektion] \hfill \\ Das Ökosystem um eine Population herum übt einen so genanten Selektionsdruck auf die darin lebenden Organismen aus. Lebensformen, die nicht bestimmten Ansprüchen genügen, werden aus dem Genpool eliminiert.
 
-	\item[Rekombination] \hfill \\ Durch sexuelle Fortpflanzung wird es zwei genetisch "fit"-en Organismen ermöglicht, ihre Gene untereinander auszutauschen. In der nächsten Generation werden ihre Nachkommen eine zufällige Auswahl an Genen ihrer beiden Elternteile tragen.
+	\item[Rekombination] \hfill \\ Durch sexuelle Fortpflanzung wird es zwei genetisch 'fit'-en Organismen ermöglicht, ihre Gene untereinander auszutauschen. In der nächsten Generation werden ihre Nachkommen eine zufällige Auswahl an Genen ihrer beiden Elternteile tragen.
 
 	\item[Mutation] \hfill \\ Im Vorgang der Gen-Rekombination kann es vorkommen, dass Reproduktions-Fehler auftreten. Die Folge davon ist, dass die nachkommen Gen-Eigenschaften haben können, die nicht Teil des ursprünglichen Genpools der Elterngeneration waren. Diese Mutationen treten zufällig auf und haben ebenso willkürliche Auswirkungen.
 \end{description}
@@ -111,6 +111,27 @@ Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft 
 \subsection{Simulation}
 
 \section{Branch and Bound}
+
+Branch and Bound ist ein Entwurfsmuster für Lösungsalgorithmen von Optimierungsproblemen. Unserer Gruppe wurde von Veranstalterseite empfohlen, uns mit diesem System zu befassen und  die Möglichkeiten, einer Anwendung der Branch and Bound Methode zur Konstruktion eines Algorithmus für die Bearbeitung des Stapel- oder Packen-Problems, einzuschätzen.
+
+In den folgenden beiden Abschnitten werden wir das generelle Entwurfsschema Branch and Bound erläutern und seine Tauglichkeit für die Behandlung der Problemstellungen des Projekts evaluieren.
+
+\subsection{Das Verfahren}
+
+Branch and Bound basiert auf einer selektiven Suche durch bestimmte, gewählte Teilmengen der Menge aller möglichen Belegungen. Das Vorgehen besteht aus den zwei namensgebenden Schritten Branch und Bound.
+
+Im Branch-Schritt wird ein Lösungsbaum generiert, in dem iterativ das Problem mit jedem Schritt in immer weiter vereinfachte Teilprobleme aufgeteilt wird. Zur Veranschaulichung: Eine der einfachsten Vereinfachungen wäre es, einen Parameter auf einen fixen Wert festzulegen, oder auf einen bestimmten Wertebereich einzugrenzen. 
+Dadurch entsteht ein möglicherweise sehr großer Baum, der alle möglichen Parameterbelegungen hierarchisch ordnet.
+
+Der Bound-Schritt entfernt nun Teilprobleme, deren mögliche Lösungen nicht ausreichend gut sind. Für jedes Teilproblem wird zu diesem Zwecke eine obere und eine untere Schranke berechnet. Dazu können beispielsweise Heuristiken oder spezifische Kennwerte des Problems herangezogen werden.
+Sollten nun bei einem Minimierungsproblem, wie unserem, Teilprobleme/Zweige mit einer unteren Schranke gefunden werden, die größer als die obere Schranke eines anderen Teilproblems, so brauchen wir in diesem Zweig nicht weiter nach einer Lösung suchen. Der Zweig wird dann entsprechend vom Baum abgetrennt und nicht weiter aufgefächert.
+
+\subsection{Tauglichkeit}
+
+Branch and Bound lässt sich theoretisch auf jede Art von Problem anwenden, jedoch stellt sich stets die Frage, ob für eine Zerlegung Schranken gefunden werden können, die scharf genug sind, um die Suche auf eine Teilmenge einzuschränken, die klein genug ist. 
+Findet sich das nicht, entartet Branch and Bound zu einer einfachen brute-force Suche durch den Lösungsraum nach einer guten Lösung.
+
+--------------------TODO-------------------------
 
 \section{Nicht-lineare Optimierung mit numerischen Verfahren des Stapelproblems}
 
