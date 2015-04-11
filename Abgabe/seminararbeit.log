@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.12.15)  11 APR 2015 17:13
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2014.12.15)  11 APR 2015 17:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -764,7 +764,7 @@ Package pdftex.def Info: armijo.png used on input line 192.
 Underfull \vbox (badness 6396) has occurred while \output is active []
 
 [7]
-Overfull \hbox (19.78421pt too wide) in paragraph at lines 254--255
+Overfull \hbox (19.78421pt too wide) in paragraph at lines 255--256
 []\T1/ptm/m/n/10 Im Rah-men des Soft-wa-re-pro-jekts ka-men Penalty-, Barriere-
 , and aug-men-tier-te Lagrange-
  []
@@ -772,10 +772,10 @@ Overfull \hbox (19.78421pt too wide) in paragraph at lines 254--255
 (/home/bzfgottw/Schriftliche-abgabe/Abgabe/seminararbeit.bbl) [8] (/home/bzfgot
 tw/Schriftliche-abgabe/Abgabe/seminararbeit.aux) ) 
 Here is how much of TeX's memory you used:
- 6143 strings out of 493304
- 80582 string characters out of 6139870
- 162360 words of memory out of 5000000
- 9438 multiletter control sequences out of 15000+600000
+ 6144 strings out of 493304
+ 80603 string characters out of 6139870
+ 162444 words of memory out of 5000000
+ 9439 multiletter control sequences out of 15000+600000
  37296 words of font info for 57 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  42i,9n,32p,1200b,368s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -797,7 +797,7 @@ crr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/
 texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
 Output written on /home/bzfgottw/Schriftliche-abgabe/Abgabe/seminararbeit.pdf (
-8 pages, 193967 bytes).
+8 pages, 193750 bytes).
 PDF statistics:
  101 PDF objects out of 1000 (max. 8388607)
  72 compressed objects within 1 object stream
