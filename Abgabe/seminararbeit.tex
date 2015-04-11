@@ -110,6 +110,27 @@ Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft 
 
 \subsection{Simulation}
 
+Ein individuelles Mitglied einer Population (Individuum), wird in unserer Implementierung durch einen generischen Typ-Parameter namens 'State' realisiert. (Der im Bezug auf das biologische Konzept nicht ganz aussagekräftige Name 'State' ist an dieser Stelle der einheitlichen Gestaltung der Schnittstellen für die verschiedenen Metaheuristiken geschuldet) Im Zusammenhang mit unserem Algorithmus steht ein solches Individuum für eine (potentiell befriedigende) Lösung des gegebenen Problems. Angewendet auf das Stapel-Problem wäre das beispielsweise eine bestimmte Anordnung von Polygonen.
+
+Die Natürliche Selektion wird in unserem Algorithmus mit Hilfe von Instanzen des generischen 'Survival'-Typs simuliert. Das entsprichende Interface spezifiziert die 'findSurvivors'-Methode, die, ausgehend von der konkreten Implementierung, aus der aktuellen Population diejenigen Individuen auswählt, die schließlich die neue Generation bilden. Ein naheliegender Ansatz für die Implementierung wäre beispielsweise ein Verfahren, das die n fittesten Individuen (also die n aktuell besten Lösungen für das Problem) auswählt. Eine weitere beliebte Möglichkeit stellen randomisierte Auswahlverfahren dar.
+
+Die Berechnung der Güte eines konkreten Individuums erfolgt mit Hilfe einer Bewertungsfunktion, die über das Interface 'ObjectiveFunction' definiert werden kann. Für das Packen und Stapeln entspricht das beispielsweise der Berechnung der Fläche der konvexen Hülle.
+
+Für die Rekombination steht in unserer Implementierung das 'CrossOver'-Interface zur Verfügung. Hier wird die 'cross'-Methode spezifiziert, die als Parameter Individuen aus der aktuellen Population entgegennimmt und neue zurückgibt. An dieser Stelle abstrahieren wir von dem biologischen Konzept, indem wir nicht nur Rekombinationen von zwei Elternteilen zulassen. Die Methode erhält als stattdessen eine beliebig lange Liste von Individuen und kann ebenso eine beliebig lange Liste von neu kombinierten Individuen zurückgeben.     
+
+Das Konzept der Mutation wird durch das 'Mutator'-Interface bereitgestellt. Dies spezifiziert die 'mutate'-Methode, welche aus einem als Parameter übergebenen Mitglied der Population ein neues (mutiertes) Individuum erzeugt. Als konkrete Implementierung für das Packen-Problem ist beispielsweise randomisiertes Verschieben und Drehen der einzelnen Polygone möglich oder ein Verschieben bis zum nächsten Schnittpunkt mit einem anderen Polygon.
+
+\subsection{Ablauf}
+
+Dem Konstruktor der 'GeneticAlgorithm'-Klasse werden zunächst folgende Parameter übergeben:
+\begin{enumerate}
+\item Die gewünschte Größe einer Population 
+\item Die gewünschte Anzahl an Iterationen (Eine Iteration entspricht der Herausbildung einer neuen Generation)
+\item Die Anzahl der mutierten und rekombinierten Individuen für jede Iteration
+\item Die 'Survival'-, 'CrossOver'-, 'ObjectiveFunction' und 'Mutator'-Objekte
+\end{enumerate}
+Aus einem initial gegeben 'State' wird zunächst mit Hilfe von Mutationen die Ausgangspopulation erstellt. Das beste Individuum wird als aktuell beste Lösung gespeichert. Anschließend werden iterativ neue Generationen herausgebildet, wobei durch Mutation und Rekombination solange neue Individuen zu der aktuellen Population hinzugefügt werden bis die spezifizierte Anzahl erreicht ist. Anschließend wird durch das 'Survival'-Objekt die neue Generation ausgewählt. Nach jeder Iteration wird erneut ermittelt ob ein besseres Individuum, als das aktuell beste erzeugt wurde. Nachdem die festgelegte Anzahl von Iterationen durchlaufen wurde wird das die beste Lösung zurückgegeben. 
+
 \section{Branch and Bound}
 
 Branch and Bound ist ein Entwurfsmuster für Lösungsalgorithmen von Optimierungsproblemen. Unserer Gruppe wurde von Veranstalterseite empfohlen, uns mit diesem System zu befassen und  die Möglichkeiten, einer Anwendung der Branch and Bound Methode zur Konstruktion eines Algorithmus für die Bearbeitung des Stapel- oder Packen-Problems, einzuschätzen.
