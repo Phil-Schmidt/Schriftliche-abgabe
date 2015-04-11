@@ -15,6 +15,9 @@
 \usepackage{verbatim}
 \usepackage{listings}
 \usepackage{qtree}
+\usepackage{float}
+\floatstyle{boxed}
+\restylefloat{figure}
 \usepackage{cite}
 % deutsche Silbentrennung
 \usepackage[ngerman]{babel}
@@ -32,7 +35,7 @@
 \subtitle{Metaheuristiken II}
 \date{Wintersemester 2014/2015}
 
-\author{Robert Gottwald, Lars Parmakerli, Phil Schmidt}
+\author{Robert Lion Gottwald, Lars Parmakerli, Phil Schmidt}
 
 \institute{
 Freie Universit\"at Berlin\\ Institut for Computer Science \\ robert.gottwald@fu-berlin.de \\ -Lars - fu-Adresse-\\  philschmidt@inf.fu-berlin.de \\
@@ -137,6 +140,7 @@ Findet sich das nicht, entartet Branch and Bound zu einer einfachen brute-force 
 Das Stapelproblem lässt sich als Optimierungsproblem einer nicht-linearen Zielfunktion ohne Nebenbedingungen formulieren. Die Zielfunktion ${f: \mathbb{R}^n \rightarrow \mathbb{R}}$ erhält die Translations-Vektoren und die Rotationswinkel für jedes der gegebenen Polygone als Eingabe und ordnet diesen die Fläche der konvexen Hülle, bzw. der Bounding-Box, zu. Im zweidimensionalen sind das also drei Parameter für jedes Polygon.
 
 \subsection{Lösungs-Verfahren}
+\label{sec:uncon_nonlin_opt}
 
 \subsubsection{Newton-Verfahren}
 
@@ -152,14 +156,14 @@ Bei der Minimierung der Funktion aus \ref{formObjStacking} ist die erste Ableitu
 
 Um das Newton Verfahren für vektorwertige Funktionen einzusetzen wird die Formel zu
 \begin{equation}
-\label{ndimnewtonstep}
+\label{eq:ndimnewtonstep}
 x_{n+1} = x_n - H^{-1}g
 \end{equation}
 Dabei ist $H := f''(x_n)$ die Hesse-Matrix und $g := f'(x_n)$ der Gradient.
 
 Anstatt aber die Inverse direkt zu berechnen, ist es günstiger den Iterations-Schritt ${s_n := x_{n+1} - x_n}$ durch lösen des linearen Gleichungssystems
 \begin{equation}
-\label{newtonlineq}
+\label{eq:newtonlineq}
 Hs_n=-g
 \end{equation}
 zu berechnen und dann ${x_{n+1} = x_n + s_n}$.
@@ -185,24 +189,107 @@ s_n := x_{n+1} - x_n = -B_n^{-1}*g\\
 y_k := f'(x_{n+1}) - f'(x_n)
 \end{equation*}
 
-Ausserdem gibt es noch eine Variante der Formel um direkt die Inverse Hesse-Matrix zu approximieren. Das hat den Vorteil, dass der Quasi-Newton-Schritt wie in Gleichung (\ref{ndimnewtonstep}) berechnet werden kann und daher kein lineares Gleichungssystem in jedem Schritt gelöst werden muss wie in Gleichung (\ref{newtonlineq}). Diese Variante verwenden wir auch in unserer Implementierung des BFGS-Verfahrens.
-\begin{equation*}
+Ausserdem gibt es noch eine Variante der Formel um direkt die Inverse Hesse-Matrix zu approximieren. Das hat den Vorteil, dass der Quasi-Newton-Schritt wie in Gleichung (\ref{eq:ndimnewtonstep}) berechnet werden kann und daher kein lineares Gleichungssystem in jedem Schritt gelöst werden muss wie in Gleichung (\ref{eq:newtonlineq}). Diese Variante verwenden wir auch in unserer Implementierung des BFGS-Verfahrens.
+\begin{equation}
+\label{eq:bfgsinverse}
 B_{n+1}^{-1} = (I - p_n s_n y_n^T) B_n^{-1} (I - p_n y_n s_n^T) + p_n s_n s_n^T \\ p_n = \frac{1}{y_n^Ts_n}
-\end{equation*}
+\end{equation}
+
+Die BFGS-Updateformel hat zusätzlich noch die Eigenschaft 
 
 \subsubsection{Line search}
+
 Für die globale Optimierung mit (Quasi-)Newton-Verfahren ist es oft nicht sinnvoll immer den vollen Schritt $s_n$ zu verwenden, sonder diesen zu skalieren. Die Schrittweite $\alpha$ soll so gewählt werden, dass der Funktionswert möglichst klein wird. Also die univariate Funktion
 \begin{equation*}
 \Phi(\alpha) = f(x_n + \alpha s_n)
 \end{equation*}
-minimal wird. Das ist im allgemeinen sehr aufwändig und es lohnt sich meistens nicht diesen Aufwand in jeder Iteration zu betreiben. Es reicht in der Praxis bestimmte Anforderungen an die gewählte Schrittweite zu stellen sodass die Konvergenz garantiert werden kann. Damit die Schrittweite nicht zu groß wird, wird häufig die Armijo-Bedingung verwendet.
+minimal wird.
+
+\begin{figure}[ht]
+ \centering
+ \includegraphics[scale=0.25]{armijo}
+ \caption{Armijo Bedingung \cite{nocedal1999numerical}}
+ \label{img:armijo}
+\end{figure}
+
+Dazu ist es wichtig, dass die Richtung $s_n$ eine Abstiegsrichtung ist, also der Funktionswert in dieser Richtung zunächst abnimmt. Das ist im Allgemeinen sehr aufwändig und es lohnt sich meistens nicht diesen Aufwand in jeder Iteration zu betreiben. Es reicht in der Praxis bestimmte Anforderungen an die gewählte Schrittweite zu stellen sodass die Konvergenz garantiert werden kann. Damit die Schrittweite nicht zu groß wird, wird häufig die Armijo-Bedingung verwendet.
 \begin{equation}
-f(x_n+\alpha s_n) \le f(x_n)+c_1\alpha f'(x_n) s_n
+\label{eq:armijo}
+f(x_n+\alpha s_n) \le f(x_n)+c_1\alpha f'(x_n)^T s_n
 \end{equation}
-Dabei ist $f'(x_n) s_n = \Phi'(0)$ die Richtungsableitung von $f$ in Richtung $s_n$.
+Dabei ist $f'(x_n)^T s_n = \Phi'(0)$ die Richtungsableitung von $f$ in Richtung $s_n$, welche negativ ist wenn $s_n$ eine Abstiegsrichtung ist. Die Bedingung erzwingt also, dass die Zielfunktion $f$ in Richtung $s_n$ proportional zur Steigung im Punkt $x_n$ und proportional zur Schrittweite abnimmt. Die Konstante $c_1 \in (0,1)$ kann frei gewählt werden, wobei kleinere Werte die Bedingung abschwächen.
 
+Die gestrichelte Linie in Abbildung \ref{img:armijo} veranschaulicht die Armijo-Bedinung. Die Funktionswerte, die unter ihr liegen, erfüllen die Bedingung, die Funktionswerte darüber jedoch nicht. Die Armijo-Bedingung alleine reicht aber nicht um eine Kovergenz zu garantieren, denn ein genügend kleiner Schritt erfüllt die Bedingung immer. Dazu eignet sich die Krümmungs-Bedingung.
+\begin{equation}
+\label{eq:curvature}
+f'(x_n+\alpha*s_n)^T s_n \ge c_2 f'(x_n)^T s_n
+\end{equation}
+Diese Bedingung erzwingt, dass die Funktion im gewählten Punkt nicht mehr so stark abnimmt wie im Punkt $x_n$. Wenn nämlich die Steigung in einem Punkt noch stark negativ ist, macht es Sinn noch weiter in diese Richtung zu gehen. Die Konstante ${c_2\in (c_1,1)}$ kann, wie $c_1$, frei gewählt werden, wobei kleinere Werte die Bedingung verstärken. Wir verwenden die Werte $c_1 = 1e-4$ und $c_2 = 0.9$, da sich durch experimentieren gezeigt hat, dass strengere Werte die Gesamtlaufzeit eher negativ beeinflussen.
 
-\section{Nicht-lineare Optimierung mit numerischen Verfahren des Packenproblems}
+\begin{figure}[ht]
+ \centering
+ \begin{description}
+ \item[Eingabe] Startwert $x_0$, Zielfunktion $f$, maximale Iterationszahl $N$, Konstanten $c_1,c_2$.
+ \item[Ausgabe] Eine bessere bzw. lokal optimale Lösung $x_{\text{\tiny{BFGS}}}$.
+ \end{description}
+ \begin{enumerate}
+ 	\item Wähle $u=0$, $v=\infty$ und $\alpha = 1$
+ 	\item Wiederhole:
+ 	\begin{enumerate}
+ 	\item Wenn Bedingung (\ref{eq:armijo}) für $\alpha$ verletzt ist, setze $v=\alpha$
+ 	\item Ansonsten wenn Bedingung (\ref{eq:curvature}) für $\alpha$ verletzt ist, setzte $u=\alpha$.
+ 	\item Ansonsten gebe $\alpha$ zurück.
+ 	\item Wenn $v < \infty$ setze $\alpha = \frac{u+v}{2}$
+ 	\item Ansonsten setze $\alpha = 2\alpha$
+ 	\end{enumerate}
+ \end{enumerate}
+ \caption{Line search Algorithmus \cite{DBLP:journals/mp/LewisO13}}
+ \label{alg:linesearch}
+\end{figure}
+
+Die Bedingungen (\ref{eq:armijo}) und (\ref{eq:curvature}) zusammen nennt man die Wolfe-Bedingungen. Fügt man zur linken und rechten Seite der Bedingung (\ref{eq:curvature}) noch Beträge hinzu, dann spricht man von den starken Wolfe-Bedingungen. Wir verwenden jedoch die Variante ohne Berträge, denn die starken Wolfe-Bedingungen eignen sich nur für glatte Funktionen \cite{DBLP:journals/mp/LewisO13}.
+
+Ein recht einfacher und für nicht-glatte Funktionen geeigneter Algorithmus um einen Punkt zu finden, welcher die Bedingungen (\ref{eq:armijo}) und (\ref{eq:curvature}) erfüllt, ist in Abbildung (\ref{alg:linesearch}) beschrieben. Beginnend mit der Schrittweite $\alpha=1$ verdoppelt er diese solange, bis ein Punkt gefunden wurde, der die Armijo-Bedingung verletzt. Dieser Wert für die Schrittweite wird dann als obere Schranke $v$ gesetzt. Daraufhin wird Bisektion verwendet, um im Intervall $(u,v)$ einen Punkt zu finden, der beide Bedingungen, (\ref{eq:armijo}) und (\ref{eq:curvature}), erfüllt. Immer wenn die Bedingung (\ref{eq:armijo}) verletzt ist, wird in der linken Intervallhälfte weitergesucht und wenn Bedingung (\ref{eq:curvature}) verletzt ist, dann in der rechten Hälfte.
+
+\subsubsection{BFGS-Algorithmus}
+\begin{figure}[ht]
+ \centering
+ \begin{description}
+ \item[Eingabe] Startwert $x_0$, Zielfunktion $f$, maximale Iterationszahl $N$.
+ \item[Ausgabe] Eine bessere bzw. lokal optimale Lösung $x_{\text{\tiny{BFGS}}}$
+ \end{description}
+ \begin{enumerate}
+ 	\item Wähle $B_0^{-1}$ positiv Definit (z.B als Identitätsmatrix).
+ 	\item Für jedes $i \in [0,N)$:
+ 	\begin{enumerate}
+ 	\item Berechne $s_i = - B_i^{-1} f'(x_i)$.
+ 	\item Wähle $\alpha$ mit dem Algorithmus in Abbildung \ref{alg:linesearch}.
+ 	\item Wenn Abbruchbedingung erreicht gebe $x_{\text{\tiny{BFGS}}} = x_i$ zurück.
+ 	\item Setzte $x_{i+1} = x_i + \alpha s_i$.
+ 	\item Berechne $B_{i+1}^{-1}$ nach Formel (\ref{eq:bfgsinverse}).
+ 	\end{enumerate}
+ 	\item Gebe $x_{\text{\tiny{BFGS}}} = x_{N-1}$ zurück.
+ \end{enumerate}
+ \caption{BFGS Algorithmus}
+ \label{alg:bfgs}
+\end{figure}
+
+Die BFGS-Updateformel erhält die positive Definitheit der approximierten Hesse-Matrix, wenn der nächste gewählte Punkt die Wolfe-Bedingungen erfüllt. Ist die Hesse-Matrix positiv definit, liefert der Newton-Schritt (\ref{eq:ndimnewtonstep}) garantiert eine Abstiegsrichtung. Der BFGS-Algorithmus, wie wir ihn implementiert haben, funktioniert wie in Abbildung \ref{alg:bfgs} beschrieben.
+Der Algorithmus terminiert wenn die maximale Iterationszahl erreicht wurde, oder wenn die Abbruchbedingung, z.B. dass der Line search Algorithmus keinen geeigneten Schritt mehr findet, erfüllt ist.
+
+\section{Nicht-lineare Optimierung mit numerischen Verfahren des Packproblems}
+\label{sec:cons_nonlin_opt}
+Das Packproblem benötigt im Gegensatz zu dem Stapelproblem noch Nebenbedingungen. Und zwar, dass für jedes Paar von Polygonen $i,j$ mit $i \neq j$ die Überlappungsfläche $c_{ij}=0$ ist. Für die nicht-lineare Optimierung unter Nebenbedingung gibt es verschiedene Ansätze.
+
+Im Rahmen des Softwareprojekts kamen Penalty-, Barriere-, and augmentierte Lagrange-Verfahren in Frage, da diese nicht zu Komplex sind und trotzdem gute Ergebnisse möglich sind \cite{nocedal1999numerical}. Diese Verfahren haben gemeinsam, dass sie die Nebenbedingungen behandeln, indem sie zusätzliche Terme der Zielfunktion hinzufügen und dann eine Folge von nicht-linearen Optimierungsproblemen ohne Nebenbedingunen auf dieser Zielfunktion lösen. Der Vorteil dabei ist, dass die Algorithmen aus Abschnitt \ref{sec:uncon_nonlin_opt} wiederverwendet werden können um die Teilprobleme zu lösen.
+
+Für das Packproblem haben wir Barriere-Verfahren als weniger gut geeignet eingestuft. Barriere-Verfahren arbeiten mit Bestrafungs-Termen die schon unendlich groß werden, wenn die Lösung sich einer ungültigen Lösung annähert. So wird eine Suche durch den Raum der gültigen Lösungen ausgeführt. Im Packproblem sind jedoch gerade die Lösungen optimal, bei denen sich zwei Polygone berühren, also durch die Barriere-Terme schon unendlich stark bestraft werden.
+
+Das Penalty-Verfahren funktioniert ebenfalls mit Bestrafungs-Termen in der Zielfunktion, welche jedoch erst ansteigen, wenn die Nebenbedingung auch tatsächlich verletzt ist. Bei beiden Verfahren gibt es jedoch numerische Schwierigkeiten \cite{nocedal1999numerical}. Das augmentierte Lagrange-Verfahren basiert auf dem Penalty-Verfahren erweitert die Zielfunktion jedoch noch um zusätzliche Terme, die die numerische Stabilität des Verfahrens verbessern. Vor diesem Hintergrund haben wir uns schließlich für die Implementierung des augmentierten Lagrange-Verfahrens entschieden.
+
+\subsection{Augmentiertes Lagrange-Verfahren}
+TODO
+
 \bibliography{literature}{}
 \bibliographystyle{IEEEtran}
 \end{document}
