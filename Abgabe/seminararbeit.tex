@@ -267,7 +267,29 @@ Für das Packproblem haben wir Barriere-Verfahren als weniger gut geeignet einge
 Das Penalty-Verfahren funktioniert ebenfalls mit Bestrafungs-Termen in der Zielfunktion, welche jedoch erst ansteigen, wenn die Nebenbedingung auch tatsächlich verletzt ist. Bei beiden Verfahren gibt es jedoch numerische Schwierigkeiten \cite{nocedal1999numerical}. Das augmentierte Lagrange-Verfahren basiert auf dem Penalty-Verfahren erweitert die Zielfunktion jedoch noch um zusätzliche Terme, die die numerische Stabilität des Verfahrens verbessern. Vor diesem Hintergrund haben wir uns schließlich für die Implementierung des augmentierten Lagrange-Verfahrens entschieden.
 
 \subsection{Augmentiertes Lagrange-Verfahren}
-TODO
+Das Verfahren fügt zwei Terme zur Zielfunktion hinzu, sodass sie die folgende Form hat.
+\begin{equation}
+\label{eq:aug_lagrangian}
+\mathcal{L}(x,\lambda,\mu) := f(x) - \sum_{\substack{i,j \in P \\ i\neq j}} \lambda_{ij} c_{ij}(x) + \frac{1}{2\mu}\sum_{\substack{i,j \in P \\ i\neq j}} c_{ij}(x)^2
+\end{equation}
+Dabei bezeichnet $P$ die Menge der Polygone und $c_{ij}(x)$ die Überlappungsfläche der Polygone $i$ und $j$ für eine Lösung $x$. Zu jeder Nebenbedingung $c_{ij}$ gibt es zugehörige Lagrange-Multiplizierer $\lambda_{ij}$, die im zweiten Term der Funktion vorkommen. Der Parameter $\mu$ skaliert den zweiten Term der Zielfunktion, der die verletzung der Nebenbedingungen quadratisch bestraft. Die Zielfunktion unterscheidet sich nur durch den zweiten Term von dem Penalty-Verfahren. Dieser Term bewirkt, dass $\mu$ im augmentierten Lagrange-Verfahren nicht mehr so klein gewählt werden muss, um eine gültige Lösung zu erhalten. Das verringert die Wahrscheinlichkeit von numerischen Problemen, die enstehen können, wenn mit sehr kleinen Gleitkommazahlen gerechnet wird.
+
+Die Idee ist nun in Iteration $n$ die Zielfunktion $\mathcal{L}$ für ein festes $\mu_n$ und feste $\lambda_{ij}^n$ ohne Nebenbedingungen zu minimieren, z.B. mit dem BFGS-Algorithmus. Dann wird ${\mu_{n+1} \le \mu_n}$ gewählt und setzt
+\begin{equation}
+\label{eq:update_lagrange_mult}
+\lambda_{ij}^{n+1} = \lambda_{ij}^n - c_{ij}(x_n)/\mu_n 
+\end{equation}
+In Iteration $n+1$ wird dann erneut die Zielfunktion $\mathcal{L}$ minimiert, welche sich durch die neuen Werte für $\mu$ und die $\lambda^{n+1}$ verändert hat. Dabei wird die Lösung der Iteration $n$ als Ausgangspunkt benutzt.
+
+Für gewöhnlich ist $\mu$ Anfangs groß. Verletzungen der Nebenbedingungen werden also kaum bestraft. Dann wird $\mu$ immer kleiner wodurch die Bestrafung der Nebenbedingungen zunimmt. Gleichzeitig nähern sich durch die Formel (\ref{eq:update_lagrange_mult}) die Werte des Vektors $\lambda$ den optimalen Lagrange-Multiplizierern an \cite{nocedal1999numerical}. Das führt dazu, dass die Verletzung der Nebenbedingungen letzendlich immer kleiner wird, bis eine gültige Lösung, im Rahmen der gewünschten Genauigkeit, gefunden wurde.
+
+\subsection{Ableitungen}
+Um die Ableitung der Zielfunktion (\ref{eq:aug_lagrangian}) zu Berechnen ist es wichtig nicht die gesamte Funktion numerisch Abzuleiten. Denn durch die Skalierung mit $\mu$ und den Lambda ist so keine hinreichend genaue Ableitung der Nebenbedingungen möglich. Stattdessen verwenden wir die Formel \cite{nocedal1999numerical}
+\begin{equation*}
+\mathcal{L}(x,\lambda,\mu)' = f'(x) - \sum_{\substack{i,j \in P \\ i\neq j}}(\lambda_{ij} - c_{ij}(x)/\mu) c_{ij}'(x)
+\end{equation*}
+Dabei berechnen wir $f'(x)$ numerisch, wie in Abschnitt \ref{sec:uncon_nonlin_opt}, und $c_{ij}'(x)$ ebenfalls. Dafür nutzen wir die besondere Struktur von $c_{ij}'(x)$ aus: Es sind nur sechs Einträge nicht null. Nämlich die Translations- und Rotationsparameter von Polygon $i$ und $j$. Zusätzlich sind die Ableitungen nach den Translationsparametern von Polygon $i$ die negierten Werte der Parameter von Polygon $j$, denn wenn die Überlappung durch Verschiebung in positiver $x$-Richtung von Polygon $i$ kleiner wird, muss sie durch Verschiebung in negativer $x$-Richtung von Polygon $j$ um den selben Wert kleiner werden. Dadurch müssen nur vier Einträge des Ableitungsvektors $c_{ij}(x)$ pro Nebenbedingung tatsächlich berechnet werden.
+
 
 \bibliography{literature}{}
 \bibliographystyle{IEEEtran}
