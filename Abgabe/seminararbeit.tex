@@ -138,7 +138,7 @@ Branch and Bound ist ein Entwurfsmuster für Lösungsalgorithmen von Optimierung
 
 In den folgenden beiden Abschnitten werden wir das generelle Entwurfsschema Branch and Bound erläutern und seine Tauglichkeit für die Behandlung der Problemstellungen des Projekts evaluieren.
 
-\subsection{Das Verfahren}
+\subsubsection{Das Verfahren}
 
 Branch and Bound basiert auf einer selektiven Suche durch bestimmte, gewählte Teilmengen der Menge aller möglichen Belegungen. Das Vorgehen besteht aus den zwei namensgebenden Schritten Branch und Bound.
 
@@ -148,12 +148,12 @@ Dadurch entsteht ein möglicherweise sehr großer Baum, der alle möglichen Para
 Der Bound-Schritt entfernt nun Teilprobleme, deren mögliche Lösungen nicht ausreichend gut sind. Für jedes Teilproblem wird zu diesem Zwecke eine obere und eine untere Schranke berechnet. Dazu können beispielsweise Heuristiken oder spezifische Kennwerte des Problems herangezogen werden.
 Sollten nun bei einem Minimierungsproblem, wie unserem, Teilprobleme/Zweige mit einer unteren Schranke gefunden werden, die größer als die obere Schranke eines anderen Teilproblems, so brauchen wir in diesem Zweig nicht weiter nach einer Lösung suchen. Der Zweig wird dann entsprechend vom Baum abgetrennt und nicht weiter aufgefächert.
 
-\subsection{Tauglichkeit}
+\subsubsection{Tauglichkeit}
 
 Branch and Bound lässt sich theoretisch auf jede Art von Problem anwenden, jedoch stellt sich stets die Frage, ob für eine Zerlegung Schranken gefunden werden können, die scharf genug sind, um die Suche auf eine Teilmenge einzuschränken, die klein genug ist. 
 Findet sich das nicht, entartet Branch and Bound zu einer einfachen brute-force Suche durch den Lösungsraum nach einer guten Lösung.
 
---------------------TODO-------------------------
+Diese Schwierigkeit findet sich auch bei der Anwendung auf Packen und Stapeln wieder. Branches können zwar generiert werden, indem wir zum Beispiel beim Packen gemeinsame Kanten von Polygonen festlegen, oder die Polygone diskreten, räumlichen Abschnitten zuweisen, jedoch findet sich keine einfache Methode, sinnvolle Schranken für diese Teilprobleme zu berechnen. Natürlich kann beispielsweise der gesamte Flächeninhalt der Polygone als untere Schranke gewählt werden, allerdings ändert sich diese nicht für verschiedene Teilprobleme. Demnach ist Branch and Bound für unseren Anwendungsfall tendenziell ungeeignet.
 
 \section{Nicht-lineare Optimierung mit numerischen Verfahren des Stapelproblems}
 
