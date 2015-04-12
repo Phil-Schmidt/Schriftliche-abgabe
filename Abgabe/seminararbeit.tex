@@ -335,11 +335,37 @@ Um die Ableitung der Zielfunktion (\ref{eq:aug_lagrangian}) zu Berechnen ist es 
 Dabei berechnen wir $f'(x)$ numerisch, wie in Abschnitt \ref{sec:uncon_nonlin_opt}, und $c_{ij}'(x)$ ebenfalls. Dafür nutzen wir die besondere Struktur von $c_{ij}'(x)$ aus: Es sind nur sechs Einträge nicht null. Nämlich die Translations- und Rotationsparameter von Polygon $i$ und $j$. Zusätzlich sind die Ableitungen nach den Translationsparametern von Polygon $i$ die negierten Werte der Parameter von Polygon $j$, denn wenn die Überlappung durch Verschiebung in positiver $x$-Richtung von Polygon $i$ kleiner wird, muss sie durch Verschiebung in negativer $x$-Richtung von Polygon $j$ um den selben Wert kleiner werden. Dadurch müssen nur vier Einträge des Ableitungsvektors $c_{ij}'(x)$ pro Nebenbedingung tatsächlich berechnet werden.
 
 \subsection{Algorithmus}
-Um die Funktionsweise unserer Implementierung zu verdeutlichen sieht man in Abbildung \ref{fig:packing} wir hier eine Serie von Bildern ausgewählter Iterationen einer Ausführung des Algorithmus. Die Bilder wurden mit der Funktion die Animationen als GIF zu exportieren erstellt, stellen also eine tatsächliche ausführung in der Abgabeversion des Softwareprojekts dar.
+\subsubsection{Augmentierter Lagrange-Algorithmus}
+\begin{figure}[ht]
+ \centering
+ \begin{description}
+ \item[Eingabe] Startwert $x_0$, Zielfunktion $f$, Nebenbedingungen $c_ij$ maximale Iterationszahl $N$.
+ \item[Ausgabe] Eine gültig, bzw. nahezu gültige lokal optimale Packung $x_{\text{\tiny{PACK}}}$
+ \end{description}
+ \begin{enumerate}
+ 	\item $\mu = 10^6$
+ 	\item Setze alle $lambda_{ij}$ auf $0$
+ 	\item Für jedes $i \in [0,N)$:
+ 	\begin{enumerate}
+ 	\item Sei $f'(x) := \mathcal{L}(x, \lambda, \mu)$
+ 	\item Berechne $x_{i+1} = BFGS(x_0=x_i, f=f', N=500)$.
+ 	\item Wenn Lösung gültig gebe $x_{\text{\tiny{PACK}}} = x_{i+1}$ zurück
+ 	\item Setze $\mu = 0.5\mu $
+ 	\item Berechne mit Formel (\ref{eq:update_lagrange_mult}) neue Werte für alle $\lambda_{ij}$
+ 	\end{enumerate}
+ 	\item Gebe $x_{\text{\tiny{PACK}}} = x_{N-1}$ zurück.
+ \end{enumerate}
+ \caption{Augmentierter Lagrange-Algorithmus}
+ \label{alg:lagrange}
+\end{figure}
+
+Abbildung \ref{alg:lagrange} beschreibt, wie wir das augmentierte Lagrange-Verfahren zum Lösen des Packproblems implementiert haben. In Abbildung \ref{fig:packing} sieht man eine Serie von Bildern ausgewählter Iterationen einer Ausführung des Algorithmus. Die Bilder wurden mithilfe der Option erstellt, die Animationen während der Ausführung des Algorithmus als GIF zu exportieren. Sie stellen also eine tatsächliche Ausführung des Algorithmus in der Abgabeversion des Softwareprojekts dar. Iterationen in denen der Fortschritt nicht gut sichtbar ist wurden ausgelassen. Unter den Bildern ist die Fläche der konvexen Hülle unter der Bezeichnung $f$, wie in Abschnitt \ref{formObjStacking}, angegeben, sowie die Summe der paarweisen Überlappungsflächen $\sum c_{ij}$.
+
+Der Algorithmus funktioniert jedoch nicht immer zuverlässig. Das ist dem Umstand geschuldet, dass für eine der komplexesten Funktionen der Geometrie-Gruppen, nämlich die Überlappungsfläche zweier Polygone zu berechnen, nicht mehr genug Zeit war diese ausgiebig zu testen. Diese Funktion ist jedoch essentiell für dieses Verfahren, denn wenn es während der Ausführung zu Auswertungsfehlern dieser Funktion kommt, so können riesige Werte in den Ableitungen der Nebenbedingungen entstehen. Das kann dann dazu führen, dass der Algorithmus nicht nachvollziehbare Schritte wählt oder stecken bleibt. In einer Implementierung wird z.B. die Überlappungsfläche $0$ zurückgegeben, wenn ein Polygon in einem anderen komplett enthalten ist. Wenn der Algorithmus erfolgreich durchläuft, findet er jedoch vielversprechende Packungen. Es wäre auch denkbar die numerischen Ansätze mit anderen Metaheuristiken zu kombinieren, und so den Nachteil zu umgehen, dass diese nur lokale Optima finden können.
 
 \floatstyle{ruled}
 \restylefloat{figure}
-
+\renewcommand*{\thesubfigure}{}
 \begin{figure}
 \subfigure[Startkonfiguration:\newline\hspace*{1.5em}${f=174675.7631}$, ${\sum c_{ij}=158.7219}$]{\includegraphics[width=0.49\textwidth]{iter1}}\hfill
 \subfigure[Iteration 1 (${\mu=10^6}$):\newline\hspace*{1.5em}${f=15084.4567}$, ${\sum c_{ij} = 64343.8222}$]{\includegraphics[width=0.49\textwidth]{iter2}}\\
