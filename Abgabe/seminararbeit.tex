@@ -50,13 +50,13 @@ Der folgende Text befasst sich mit der Arbeit der Gruppe Metaheuristiken II des 
 
 \section{Metaheuristiken}
 
-Das Wort Metaheuristik setzt sich aus den beiden wörtern 'Meta' und 'Heuristik'  zusammen.
+Das Wort Metaheuristik setzt sich aus den beiden Wörtern 'Meta' und 'Heuristik'  zusammen.
 Eine Heuristik ist ein Verfahren, welches für eine bestimmte Art von Problemen eine Lösung findet, die als ausreichend 'gut' erachtet wird. 
 Das Wort 'Meta-' bedeutet in diesem Kontext 'auf einer Höheren Ebene'.
 
 Eine Metaheuristik ist demnach möglichst effizientes Lösungsverfahren, welches sich auf einer höher abstahierten Ebene abspielt und somit kein Wissen über das unterliegende Problem benötigt. Die einzige bestehende Voraussetzung für das Anwenden einer Metaheuristik auf ein System, ist eine Funktion existiert, welche die Güte einer Lösung berechnen kann.
 
-Metaheuristiken stellen nützliche Werkzeuge dar, um Optimierungsproleme in komplexeren Systemen zu lösen, ohne für diese eine spezifische, kompliziertere Heuristik zu entwerfen, sind also sozusagen wiederverwendbare Lösungswege. Der Nachteil von Metaheuristiken liegt in der Effizienz in Laufzeit, sowie der meist niedrigeren Güte der erzielten Lösung.
+Metaheuristiken stellen nützliche Werkzeuge dar, um Optimierungsprobleme in komplexeren Systemen zu lösen, ohne für diese eine spezifische, kompliziertere Heuristik zu entwerfen, sind also sozusagen wiederverwendbare Lösungswege. Der Nachteil von Metaheuristiken liegt in der Effizienz in Laufzeit, sowie der meist niedrigeren Güte der erzielten Lösung.
 
 In unserem Softwareprojekt bestehen Metaheuristikmodule aus generischen Klassen mit einem Typenparameter für die Anwendungsdomäne, sowie mindestens einer Auswertungsfunktion. Einzelne Implementierungen werden in den Folgekapiteln beschrieben.
 
@@ -65,9 +65,9 @@ In unserem Softwareprojekt bestehen Metaheuristikmodule aus generischen Klassen 
 
 \subsection{Inspiration}
 
-Metaheuristiken liegen zumeist realen Prozessen zugrunde, welche ein bestimmtes verhalten aufweisen. Simulated Annealing ist vom namensgebenden Annealing-Prozess aus der Schwerindustrie inspiriert.
+Metaheuristiken liegen zumeist realen Prozessen zugrunde, welche ein bestimmtes Verhalten aufweisen. Simulated Annealing ist vom namensgebenden Annealing-Prozess aus der Schwerindustrie inspiriert.
 
-Beim Annealing wird Metal Metall stark erhitzt und über einen längeren Zeitraum langsam abgekühlt. Bei den hohen Temperaturen tritt eine starke Molekular-Bewegung im zu bearbeitenden Material auf. Dadurch, dass der Abkühlungsprozess über einen längeren Zeitraum gestreckt wird, reduziert sich die Teilchenbewegung auch nur allmählich. Der Abkühlungsprozess wird so gesteuert durch etwaige Behandlungsmethoden, dass die einzelnen Teilchen einen für einen bestimmten zu erzielenden Effekt, wie zum Beispiel eine stabile Statik, guten Zustand einnehmen.
+Beim Annealing wird  Metall stark erhitzt und über einen längeren Zeitraum langsam abgekühlt. Bei den hohen Temperaturen tritt eine starke Molekular-Bewegung im zu bearbeitenden Material auf. Dadurch, dass der Abkühlungsprozess über einen längeren Zeitraum gestreckt wird, reduziert sich die Teilchenbewegung auch nur allmählich. Der Abkühlungsprozess wird so durch etwaige Behandlungsmethoden gesteuert, dass die einzelnen Teilchen einen für einen bestimmten zu erzielenden Effekt, wie zum Beispiel eine stabile Statik, guten Zustand einnehmen.
 
 Wie der Name uns sagt, ist die Herangehensweise beim Simulated Annealing nun so, dass wir einen derartigen physikalischen Prozess über einen abstrakten Wertebereich simulieren.
 
@@ -75,7 +75,7 @@ Wie der Name uns sagt, ist die Herangehensweise beim Simulated Annealing nun so,
 
 Das zu behandelnde Metall wird in unserer Implementierung durch einen generischen Typ-Parameter namens 'State' realisiert. Bei der Anwendung auf die uns gegebene Problemstellung, wie zum Beispiel Stapeln, ist dies ein Feld aus Polygonen.
 
-Die Molekularbewegung wird durch eine Umgebungsfunktion namentlich 'Mutator' umgesetzt. Eine Umgebungsfunktion Bekommt einen 'State' als Input und gibt einen anderen 'State' zurück, der in der 'Nachbarschaft' des Eingabe-States befindet.
+Die Molekularbewegung wird durch eine Umgebungsfunktion namentlich 'Mutator' umgesetzt. Eine Umgebungsfunktion bekommt einen 'State' als Input und gibt einen anderen 'State' zurück, der in der 'Nachbarschaft' des Eingabe-States befindet.
 
 Die benötigte Gütefunktion, die jedem 'State' einen Double-Wert zuweist und für jede Metaheuristik notwendig ist, ist als Quantifizierung des durch das Annealing zu erzielenden Effekts zu interpretieren.
 
@@ -83,13 +83,13 @@ Die Unberechenbarkeit des Materials, beziehungsweise das chaotische Verhalten de
 
 \subsection{Ablauf}
 
-Simulated Annealing ist ein iteratives Verfahren. Wir nutzen zwei Zeiger; einen, der auf das aktuell beste gefundene Ergebnis zeigt ('best'), und einen, der den aktuellen Ist-Zustand der Domäne speichert ('current'). In jeder Iteration wird ein Neuer State in der Umgebung des aktuellen States mithilfe des Mutators generiert.
+Simulated Annealing ist ein iteratives Verfahren. Wir nutzen zwei Zeiger; einen, der auf das aktuell beste gefundene Ergebnis zeigt ('best'), und einen, der den aktuellen Ist-Zustand der Domäne speichert ('current'). In jeder Iteration wird ein neuer State in der Umgebung des aktuellen States mithilfe des Mutators generiert.
 
 Anschließend wird die Objective Function dazu genutzt, den neuen State zu bewerten und mit den alten States zu vergleichen. Ist ein neues globales Optimum gefunden worden, wird dieses gespeichert (best).
 
 Für die Bestimmung des neuen current-Zustandes wird eine zufällige Zahl zwischen 0 und der Maximaltemperatur generiert. Im Normalfall nimmt current den nach Gütefunktion besseren State an, es sei denn es wird ein kleinerer Wert, als die aktuelle Temperatur gewürfelt. Dann nimmt current den schlechteren der beiden Werte an.
 
-Dieser Prozess wird solange fortgeführt, bis entweder eine feste Iterationsanzahl erreicht ist, oder die Lösung 'gut'-genug ist. Unsere Implementierung terminiert einfach nach einer Festen Schrittzahl.
+Dieser Prozess wird solange fortgeführt, bis entweder eine feste Iterationsanzahl erreicht ist, oder die Lösung 'gut'-genug ist. Unsere Implementierung terminiert einfach nach einer festen Schrittzahl.
 
 \section{Genetische Heuristik}
 
@@ -104,7 +104,7 @@ Evolution wird ein biologischer Prozess genannt, der optimale Adaption von Leben
 
 	\item[Rekombination] \hfill \\ Durch sexuelle Fortpflanzung wird es zwei genetisch 'fit'-en Organismen ermöglicht, ihre Gene untereinander auszutauschen. In der nächsten Generation werden ihre Nachkommen eine zufällige Auswahl an Genen ihrer beiden Elternteile tragen.
 
-	\item[Mutation] \hfill \\ Im Vorgang der Gen-Rekombination kann es vorkommen, dass Reproduktions-Fehler auftreten. Die Folge davon ist, dass die nachkommen Gen-Eigenschaften haben können, die nicht Teil des ursprünglichen Genpools der Elterngeneration waren. Diese Mutationen treten zufällig auf und haben ebenso willkürliche Auswirkungen.
+	\item[Mutation] \hfill \\ Im Vorgang der Gen-Rekombination kann es vorkommen, dass Reproduktionsfehler auftreten. Die Folge davon ist, dass die Nachkommen Gen-Eigenschaften haben können, die nicht Teil des ursprünglichen Genpools der Elterngeneration waren. Diese Mutationen treten zufällig auf und haben ebenso willkürliche Auswirkungen.
 \end{description}
 
 Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft diese Generation erneut den selben Prozess. Dabei verbessert sich langfristig das Gen-Material in Bezug auf den Selektionsdruck des bestehenden Ökosystems. Der folgende Algorithmus versucht sich daran,  ein derartiges Ökosystem mit verschiedenen Populationen zu simulieren, um einen ähnlichen Optimierungsprozess zu erzielen.
@@ -113,7 +113,7 @@ Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft 
 
 Ein individuelles Mitglied einer Population (Individuum), wird in unserer Implementierung durch einen generischen Typ-Parameter namens 'State' realisiert. (Der im Bezug auf das biologische Konzept nicht ganz aussagekräftige Name 'State' ist an dieser Stelle der einheitlichen Gestaltung der Schnittstellen für die verschiedenen Metaheuristiken geschuldet) Im Zusammenhang mit unserem Algorithmus steht ein solches Individuum für eine (potentiell befriedigende) Lösung des gegebenen Problems. Angewendet auf das Stapel-Problem wäre das beispielsweise eine bestimmte Anordnung von Polygonen.
 
-Die Natürliche Selektion wird in unserem Algorithmus mit Hilfe von Instanzen des generischen 'Survival'-Typs simuliert. Das entsprichende Interface spezifiziert die 'findSurvivors'-Methode, die, ausgehend von der konkreten Implementierung, aus der aktuellen Population diejenigen Individuen auswählt, die schließlich die neue Generation bilden. Ein naheliegender Ansatz für die Implementierung wäre beispielsweise ein Verfahren, das die n fittesten Individuen (also die n aktuell besten Lösungen für das Problem) auswählt. Eine weitere beliebte Möglichkeit stellen randomisierte Auswahlverfahren dar.
+Die Natürliche Selektion wird in unserem Algorithmus mit Hilfe von Instanzen des generischen 'Survival'-Typs simuliert. Das entsprechende Interface spezifiziert die 'findSurvivors'-Methode, die, ausgehend von der konkreten Implementierung, aus der aktuellen Population diejenigen Individuen auswählt, die schließlich die neue Generation bilden. Ein naheliegender Ansatz für die Implementierung wäre beispielsweise ein Verfahren, das die n fittesten Individuen (also die n aktuell besten Lösungen für das Problem) auswählt. Eine weitere beliebte Möglichkeit stellen randomisierte Auswahlverfahren dar.
 
 Die Berechnung der Güte eines konkreten Individuums erfolgt mit Hilfe einer Bewertungsfunktion, die über das Interface 'ObjectiveFunction' definiert werden kann. Für das Packen und Stapeln entspricht das beispielsweise der Berechnung der Fläche der konvexen Hülle.
 
@@ -130,7 +130,7 @@ Dem Konstruktor der 'GeneticAlgorithm'-Klasse werden zunächst folgende Paramete
 \item Die Anzahl der mutierten und rekombinierten Individuen für jede Iteration
 \item Die 'Survival'-, 'CrossOver'-, 'ObjectiveFunction' und 'Mutator'-Objekte
 \end{enumerate}
-Aus einem initial gegeben 'State' wird zunächst mit Hilfe von Mutationen die Ausgangspopulation erstellt. Das beste Individuum wird als aktuell beste Lösung gespeichert. Anschließend werden iterativ neue Generationen herausgebildet, wobei durch Mutation und Rekombination solange neue Individuen zu der aktuellen Population hinzugefügt werden bis die spezifizierte Anzahl erreicht ist. Anschließend wird durch das 'Survival'-Objekt die neue Generation ausgewählt. Nach jeder Iteration wird erneut ermittelt ob ein besseres Individuum, als das aktuell beste erzeugt wurde. Nachdem die festgelegte Anzahl von Iterationen durchlaufen wurde wird das die beste Lösung zurückgegeben. 
+Aus einem initial gegeben 'State' wird zunächst mit Hilfe von Mutationen die Ausgangspopulation erstellt. Das beste Individuum wird als aktuell beste Lösung gespeichert. Anschließend werden iterativ neue Generationen herausgebildet, wobei durch Mutation und Rekombination solange neue Individuen zu der aktuellen Population hinzugefügt werden, bis die spezifizierte Anzahl erreicht ist. Anschließend wird durch das 'Survival'-Objekt die neue Generation ausgewählt. Nach jeder Iteration wird erneut ermittelt ob ein besseres Individuum, als das aktuell beste erzeugt wurde. Nachdem die festgelegte Anzahl von Iterationen durchlaufen wurde wird das die beste Lösung zurückgegeben. 
 
 \section{Branch and Bound}
 
@@ -195,7 +195,7 @@ zu berechnen und dann ${x_{n+1} = x_n + s_n}$.
 
 Da wir in der Implementierung der Zielfunktion \ref{formObjStacking} die Ableitungen nicht gegeben haben, müssen wir sie numerisch approximieren. Mit der Finite-Differenzen-Methode benötigt die Berechnung der ersten Ableitung zwei Funktionsauswertungen pro Komponente, also insgesamt $2n$ Funktionsauswertungen. Würde man nun die zweite Ableitung $f''$ ebenfalls numerisch approximieren, bräuchte man $2n$ Auswertungen von $f'$, also insgesamt $4n^2$ Auswertungen der ursprünglichen Funktion $f$. Das ist nicht nur sehr aufwendig, sondern auch problematisch für die numerische Stabilität des Verfahrens. Denn die Finite-Differenzen-Methode führt leicht zu Auslöschungen, die bei der Subtraktion fast gleich großer Gleitkommazahlen auftreten.
 
-Außerdem ist die Ableitung der Zielfunktion für das Stapelproblem nicht glatt, denn wenn ein Polygon sich komplett innerhalb der konvexen Hülle befindet, ist die Ableitung bezüglich dessen Translations- und Rotationsparameter null. Sobald das Polygon jedoch so weit verschoben wird, dass es den Rand erreicht, wird die Ableitung positiv, hat also an dieser Stelle einen knick und die zweite Ableitung ist somit nicht stetig. Beweise für die Konvergenzeigenschaften von Newton-artigen Verfahren setzten jedoch zweimal stetig differenzierbare Funktionen voraus.
+Außerdem ist die Ableitung der Zielfunktion für das Stapelproblem nicht glatt, denn wenn ein Polygon sich komplett innerhalb der konvexen Hülle befindet, ist die Ableitung bezüglich dessen Translations- und Rotationsparameter null. Sobald das Polygon jedoch so weit verschoben wird, dass es den Rand erreicht, wird die Ableitung positiv, hat also an dieser Stelle einen Knick und die zweite Ableitung ist somit nicht stetig. Beweise für die Konvergenzeigenschaften von Newton-artigen Verfahren setzten jedoch zweimal stetig differenzierbare Funktionen voraus.
 
 In der Praxis hat sich jedoch gezeigt, dass es Newton-artige Verfahren zur Optimierung gibt, die gut für nicht-glatte Funktionen funktionieren \cite{DBLP:journals/mp/LewisO13} und ohne zweite Ableitungen auskommen.
 
@@ -211,7 +211,7 @@ s_n := x_{n+1} - x_n = -B_n^{-1}*g\\
 y_k := f'(x_{n+1}) - f'(x_n)
 \end{equation*}
 
-Ausserdem gibt es noch eine Variante der Formel um direkt die Inverse Hesse-Matrix zu approximieren. Das hat den Vorteil, dass der Quasi-Newton-Schritt wie in Gleichung (\ref{eq:ndimnewtonstep}) berechnet werden kann und daher kein lineares Gleichungssystem in jedem Schritt gelöst werden muss wie in Gleichung (\ref{eq:newtonlineq}). Diese Variante verwenden wir auch in unserer Implementierung des BFGS-Verfahrens.
+Außerdem gibt es noch eine Variante der Formel um direkt die Inverse Hesse-Matrix zu approximieren. Das hat den Vorteil, dass der Quasi-Newton-Schritt wie in Gleichung (\ref{eq:ndimnewtonstep}) berechnet werden kann und daher kein lineares Gleichungssystem in jedem Schritt gelöst werden muss wie in Gleichung (\ref{eq:newtonlineq}). Diese Variante verwenden wir auch in unserer Implementierung des BFGS-Verfahrens.
 \begin{equation}
 \label{eq:bfgsinverse}
 B_{n+1}^{-1} = (I - p_n s_n y_n^T) B_n^{-1} (I - p_n y_n s_n^T) + p_n s_n s_n^T \\ p_n = \frac{1}{y_n^Ts_n}
@@ -241,7 +241,7 @@ f(x_n+\alpha s_n) \le f(x_n)+c_1\alpha f'(x_n)^T s_n
 \end{equation}
 Dabei ist $f'(x_n)^T s_n = \Phi'(0)$ die Richtungsableitung von $f$ in Richtung $s_n$, welche negativ ist wenn $s_n$ eine Abstiegsrichtung ist. Die Bedingung erzwingt also, dass die Zielfunktion $f$ in Richtung $s_n$ proportional zur Steigung im Punkt $x_n$ und proportional zur Schrittweite abnimmt. Die Konstante $c_1 \in (0,1)$ kann frei gewählt werden, wobei kleinere Werte die Bedingung abschwächen.
 
-Die gestrichelte Linie in Abbildung \ref{img:armijo} veranschaulicht die Armijo-Bedinung. Die Funktionswerte, die unter ihr liegen, erfüllen die Bedingung, die Funktionswerte darüber jedoch nicht. Die Armijo-Bedingung alleine reicht aber nicht um eine Kovergenz zu garantieren, denn ein genügend kleiner Schritt erfüllt die Bedingung immer. Dazu eignet sich die Krümmungs-Bedingung.
+Die gestrichelte Linie in Abbildung \ref{img:armijo} veranschaulicht die Armijo-Bedinung. Die Funktionswerte, die unter ihr liegen, erfüllen die Bedingung, die Funktionswerte darüber jedoch nicht. Die Armijo-Bedingung alleine reicht aber nicht um eine Konvergenz zu garantieren, denn ein genügend kleiner Schritt erfüllt die Bedingung immer. Dazu eignet sich die Krümmungs-Bedingung.
 \begin{equation}
 \label{eq:curvature}
 f'(x_n+\alpha*s_n)^T s_n \ge c_2 f'(x_n)^T s_n
@@ -303,7 +303,7 @@ Der Algorithmus terminiert wenn die maximale Iterationszahl erreicht wurde, oder
 \label{sec:cons_nonlin_opt}
 Das Packproblem benötigt im Gegensatz zu dem Stapelproblem noch Nebenbedingungen. Und zwar, dass für jedes Paar von Polygonen $i,j$ mit $i \neq j$ die Überlappungsfläche $c_{ij}=0$ ist. Für die nicht-lineare Optimierung unter Nebenbedingung gibt es verschiedene Ansätze.
 
-Im Rahmen des Softwareprojekts kamen Penalty-, Barriere-, and augmentierte Lagrange-Verfahren in Frage, da diese nicht zu Komplex sind und trotzdem gute Ergebnisse möglich sind \cite{nocedal1999numerical}. Diese Verfahren haben gemeinsam, dass sie die Nebenbedingungen behandeln, indem sie zusätzliche Terme der Zielfunktion hinzufügen und dann eine Folge von nicht-linearen Optimierungsproblemen ohne Nebenbedingunen auf dieser Zielfunktion lösen. Der Vorteil dabei ist, dass die Algorithmen aus Abschnitt \ref{sec:uncon_nonlin_opt} wiederverwendet werden können um die Teilprobleme zu lösen.
+Im Rahmen des Softwareprojekts kamen Penalty-, Barriere-, and augmentierte Lagrange-Verfahren in Frage, da diese nicht zu Komplex sind und trotzdem gute Ergebnisse möglich sind \cite{nocedal1999numerical}. Diese Verfahren haben gemeinsam, dass sie die Nebenbedingungen behandeln, indem sie zusätzliche Terme der Zielfunktion hinzufügen und dann eine Folge von nicht-linearen Optimierungsproblemen ohne Nebenbedingungen auf dieser Zielfunktion lösen. Der Vorteil dabei ist, dass die Algorithmen aus Abschnitt \ref{sec:uncon_nonlin_opt} wiederverwendet werden können, um die Teilprobleme zu lösen.
 
 Für das Packproblem haben wir Barriere-Verfahren als weniger gut geeignet eingestuft. Barriere-Verfahren arbeiten mit Bestrafungs-Termen die schon unendlich groß werden, wenn die Lösung sich einer ungültigen Lösung annähert. So wird eine Suche durch den Raum der gültigen Lösungen ausgeführt. Im Packproblem sind jedoch gerade die Lösungen optimal, bei denen sich zwei Polygone berühren, also durch die Barriere-Terme schon unendlich stark bestraft werden.
 
@@ -317,7 +317,7 @@ Das Verfahren fügt zwei Terme zur Zielfunktion hinzu, sodass sie die folgende F
 \end{equation}
 Dabei bezeichnet $P$ die Menge der Polygone und $c_{ij}(x)$ die Überlappungsfläche der Polygone $i$ und $j$ für eine Lösung $x$. Der Parameter $\mu$ skaliert den dritten Term der Zielfunktion, der die verletzung der Nebenbedingungen quadratisch bestraft.
 
-Zu jeder Nebenbedingung $c_{ij}$ gibt es zugehörige Lagrange-Multiplizierer $\lambda_{ij}$. Diese skalieren im zweiten Term der Funktion die Verletzung der jeweils zugehörigen Nebenbedingung. Nur durch diesen Term unterscheidet sie sich von der Zielfunktion des Penalty-Verfahrens. Dieser Term bewirkt, dass $\mu$ im augmentierten Lagrange-Verfahren nicht so klein gewählt werden muss, um eine gültige Lösung zu erhalten. Das verringert die Wahrscheinlichkeit von numerischen Problemen, die enstehen können, wenn mit sehr kleinen Gleitkommazahlen gerechnet wird.
+Zu jeder Nebenbedingung $c_{ij}$ gibt es zugehörige Lagrange-Multiplizierer $\lambda_{ij}$. Diese skalieren im zweiten Term der Funktion die Verletzung der jeweils zugehörigen Nebenbedingung. Nur durch diesen Term unterscheidet sie sich von der Zielfunktion des Penalty-Verfahrens. Dieser Term bewirkt, dass $\mu$ im augmentierten Lagrange-Verfahren nicht so klein gewählt werden muss, um eine gültige Lösung zu erhalten. Das verringert die Wahrscheinlichkeit von numerischen Problemen, die entstehen können, wenn mit sehr kleinen Gleitkommazahlen gerechnet wird.
 
 Die Idee ist nun in Iteration $n$ die Zielfunktion $\mathcal{L}$ für ein festes $\mu_n$ und $\lambda^n$, den Vektor mit allen Lagrange-Multiplizierern, ohne Nebenbedingungen zu minimieren, z.B. mit dem BFGS-Algorithmus. Dann wird ${\mu_{n+1} \le \mu_n}$ gewählt und $\lambda^{n+1}$ mit der Formel
 \begin{equation}
@@ -327,7 +327,7 @@ Die Idee ist nun in Iteration $n$ die Zielfunktion $\mathcal{L}$ für ein festes
 berechnet.
 In Iteration $n+1$ wird dann erneut die Zielfunktion $\mathcal{L}$ minimiert, welche sich durch die neuen Werte für $\mu$ und den Vektor $\lambda^{n+1}$ verändert hat. Dabei wird die Lösung der Iteration $n$ als Ausgangspunkt benutzt.
 
-Für gewöhnlich ist $\mu$ Anfangs groß. Verletzungen der Nebenbedingungen werden also kaum bestraft. Dann wird $\mu$ immer kleiner wodurch die Bestrafung der Nebenbedingungen zunimmt. Gleichzeitig nähern sich durch die Formel (\ref{eq:update_lagrange_mult}) die Werte des Vektors $\lambda$ den optimalen Lagrange-Multiplizierern an \cite{nocedal1999numerical}. Das führt dazu, dass die Verletzung der Nebenbedingungen letzendlich immer kleiner wird, bis eine gültige Lösung, im Rahmen der gewünschten Genauigkeit, gefunden wurde. Bezogen auf die Polygone heißt das, dass diese Anfangs gestapelt werden um dann ausseinander e
+Für gewöhnlich ist $\mu$ Anfangs groß. Verletzungen der Nebenbedingungen werden also kaum bestraft. Dann wird $\mu$ immer kleiner wodurch die Bestrafung der Nebenbedingungen zunimmt. Gleichzeitig nähern sich durch die Formel (\ref{eq:update_lagrange_mult}) die Werte des Vektors $\lambda$ den optimalen Lagrange-Multiplizierern an \cite{nocedal1999numerical}. Das führt dazu, dass die Verletzung der Nebenbedingungen letzendlich immer kleiner wird, bis eine gültige Lösung, im Rahmen der gewünschten Genauigkeit, gefunden wurde. Bezogen auf die Polygone heißt das, dass diese Anfangs gestapelt werden um dann auseinander gezogen werden.
 
 \subsection{Ableitungen}
 Um die Ableitung der Zielfunktion (\ref{eq:aug_lagrangian}) zu Berechnen ist es wichtig, nicht die gesamte Funktion numerisch Abzuleiten. Denn durch die Skalierung mit $\mu$ und $\lambda$ ist so keine hinreichend genaue Ableitung der Nebenbedingungen möglich. Stattdessen verwenden wir die Formel \cite{nocedal1999numerical}
