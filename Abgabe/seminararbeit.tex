@@ -315,7 +315,9 @@ Das Verfahren fügt zwei Terme zur Zielfunktion hinzu, sodass sie die folgende F
 \label{eq:aug_lagrangian}
 \mathcal{L}(x,\lambda,\mu) := f(x) - \sum_{\{i,j\}\in {P \choose 2}} \lambda_{ij} c_{ij}(x) + \frac{1}{2\mu}\sum_{\{i,j\}\in {P \choose 2}} c_{ij}(x)^2
 \end{equation}
-Dabei bezeichnet $P$ die Menge der Polygone und $c_{ij}(x)$ die Überlappungsfläche der Polygone $i$ und $j$ für eine Lösung $x$. Zu jeder Nebenbedingung $c_{ij}$ gibt es zugehörige Lagrange-Multiplizierer $\lambda_{ij}$, die im zweiten Term der Funktion vorkommen. Der Parameter $\mu$ skaliert den zweiten Term der Zielfunktion, der die verletzung der Nebenbedingungen quadratisch bestraft. Nur durch diesen Term unterscheidet sie sich von der Zielfunktion des Penalty-Verfahrens. Dieser Term bewirkt, dass $\mu$ im augmentierten Lagrange-Verfahren nicht so klein gewählt werden muss, um eine gültige Lösung zu erhalten. Das verringert die Wahrscheinlichkeit von numerischen Problemen, die enstehen können, wenn mit sehr kleinen Gleitkommazahlen gerechnet wird.
+Dabei bezeichnet $P$ die Menge der Polygone und $c_{ij}(x)$ die Überlappungsfläche der Polygone $i$ und $j$ für eine Lösung $x$. Der Parameter $\mu$ skaliert den dritten Term der Zielfunktion, der die verletzung der Nebenbedingungen quadratisch bestraft.
+
+Zu jeder Nebenbedingung $c_{ij}$ gibt es zugehörige Lagrange-Multiplizierer $\lambda_{ij}$. Diese skalieren im zweiten Term der Funktion die Verletzung der jeweils zugehörigen Nebenbedingung. Nur durch diesen Term unterscheidet sie sich von der Zielfunktion des Penalty-Verfahrens. Dieser Term bewirkt, dass $\mu$ im augmentierten Lagrange-Verfahren nicht so klein gewählt werden muss, um eine gültige Lösung zu erhalten. Das verringert die Wahrscheinlichkeit von numerischen Problemen, die enstehen können, wenn mit sehr kleinen Gleitkommazahlen gerechnet wird.
 
 Die Idee ist nun in Iteration $n$ die Zielfunktion $\mathcal{L}$ für ein festes $\mu_n$ und $\lambda^n$, den Vektor mit allen Lagrange-Multiplizierern, ohne Nebenbedingungen zu minimieren, z.B. mit dem BFGS-Algorithmus. Dann wird ${\mu_{n+1} \le \mu_n}$ gewählt und $\lambda^{n+1}$ mit der Formel
 \begin{equation}
