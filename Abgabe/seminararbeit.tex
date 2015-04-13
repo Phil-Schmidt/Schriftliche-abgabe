@@ -171,7 +171,7 @@ Die Zielfunktion $f$ ordnet diesem Vektor dann die Fläche der konvexen Hülle b
 \end{sloppypar}
 
 \subsubsection{Newton-Verfahren}
-\cite{nocedal1999numerical} Für derartige Optimierungsprobleme gibt es verschiedene mathematische Verfahren zur numerischen Berechnung lokaler Optima. Viele dieser Verfahren basieren auf dem Newton-Verfahren zum Finden von Nullstellen einer Funktion. Um das Newton-Verfahren zur Optimierung einzusetzen, wendet man es auf die erste Ableitung $f'$ an. Denn an den Nullstellen der ersten Ableitung liegen auch die Extremwerte der Funktion. Allerdings benötigt das Newton-Verfahren auch noch die erste Ableitung der Funktion, auf die es angewendet wird, deshalb wird auch noch die zweite Ableitung $f''$ benötigt, wenn man das Newton-Verfahren zur Optimierung verwendet.
+Für derartige Optimierungsprobleme gibt es verschiedene mathematische Verfahren zur numerischen Berechnung lokaler Optima. Viele dieser Verfahren basieren auf dem Newton-Verfahren zum Finden von Nullstellen einer Funktion. Um das Newton-Verfahren zur Optimierung einzusetzen, wendet man es auf die erste Ableitung $f'$ an. Denn an den Nullstellen der ersten Ableitung liegen auch die Extremwerte der Funktion. Allerdings benötigt das Newton-Verfahren auch noch die erste Ableitung der Funktion, auf die es angewendet wird, deshalb wird auch noch die zweite Ableitung $f''$ benötigt, wenn man das Newton-Verfahren zur Optimierung verwendet.
 
 Das Verfahren berechnet die Lösung iterativ. Eine gegebene Lösung $x_n$ wird in jedem Schritt mit der Formel
 \begin{equation*}
@@ -193,7 +193,7 @@ Anstatt aber die Inverse direkt zu berechnen, ist es günstiger, mithilfe des li
 \label{eq:newtonlineq}
 Hs_n=-g
 \end{equation}
-$s_n$ zu berechnen und dann den nächsten Lösungskandidaten ${x_{n+1} = x_n + s_n}$.
+$s_n$ zu berechnen und dann den nächsten Lösungskandidaten ${x_{n+1} = x_n + s_n}$. \cite{nocedal1999numerical} 
 
 \subsubsection{Ableitungen}
 Da wir in der Implementierung der Zielfunktion \ref{formObjStacking} die Ableitungen nicht gegeben haben, müssen wir sie numerisch approximieren. Mit der Finite-Differenzen-Methode benötigt die Berechnung der ersten Ableitung zwei Funktionsauswertungen pro Komponente, also insgesamt $2n$ Funktionsauswertungen. Würde man nun die zweite Ableitung $f''$ ebenfalls numerisch approximieren, bräuchte man $2n$ Auswertungen von $f'$, also insgesamt $4n^2$ Auswertungen der ursprünglichen Funktion $f$. Das ist nicht nur sehr aufwendig, sondern auch problematisch für die numerische Stabilität des Verfahrens. Denn die Finite-Differenzen-Methode führt leicht zu Auslöschungen, die bei der Subtraktion fast gleich großer Gleitkommazahlen auftreten.
