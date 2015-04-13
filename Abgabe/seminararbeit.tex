@@ -62,11 +62,11 @@ Metaheuristiken stellen nützliche Werkzeuge dar, um Optimierungsprobleme in kom
 In unserem Softwareprojekt bestehen Metaheuristikmodule aus generischen Klassen mit einem Typenparameter für die Anwendungsdomäne sowie mindestens einer Auswertungsfunktion. Einzelne Implementierungen werden in den Folgekapiteln beschrieben.
 
 
-\section{Simulated Annealing}
+\section{Simulated Annealing\textnormal{\normalsize\cite{1983Sci...220..671K}}}
 
 \subsection{Inspiration}
 
-\cite{1983Sci...220..671K} Metaheuristiken liegen zumeist realen Prozessen zugrunde, welche ein bestimmtes Verhalten aufweisen. Simulated Annealing ist vom namensgebenden Annealing-Prozess aus der Schwerindustrie inspiriert.
+Metaheuristiken liegen zumeist realen Prozessen zugrunde, welche ein bestimmtes Verhalten aufweisen. Simulated Annealing ist vom namensgebenden Annealing-Prozess aus der Schwerindustrie inspiriert.
 
 Beim Annealing wird  Metall stark erhitzt und über einen längeren Zeitraum langsam abgekühlt. Bei den hohen Temperaturen tritt eine starke Molekular-Bewegung im zu bearbeitenden Material auf. Dadurch, dass der Abkühlungsprozess über einen längeren Zeitraum gestreckt wird, reduziert sich die Teilchenbewegung auch nur allmählich. Der Abkühlungsprozess wird so durch etwaige Behandlungsmethoden gesteuert, dass die einzelnen Teilchen einen für einen bestimmten zu erzielenden Effekt, wie zum Beispiel eine stabile Statik, guten Zustand einnehmen.
 
@@ -92,11 +92,11 @@ Für die Bestimmung des neuen current-Zustandes wird eine zufällige Zahl zwisch
 
 Dieser Prozess wird solange fortgeführt, bis entweder eine feste Iterationsanzahl erreicht ist, oder die Lösung 'gut'-genug ist. Unsere Implementierung terminiert einfach nach einer festen Schrittzahl.
 
-\section{Genetische Heuristik}
+\section{Genetische Heuristik \textnormal{\normalsize\cite{weicker2007evolutionare}}}
 
 \subsection{Inspiration}
 
-\cite{weicker2007evolutionare} Ähnlich wie beim Simulated Annealing gibt es für den folgenden genetischen Algorithmus Inspiration durch einen real-weltlichen Prozess. In diesem Fall ist es das biologische Konzept der Evolution.
+Ähnlich wie beim Simulated Annealing gibt es für den folgenden genetischen Algorithmus Inspiration durch einen real-weltlichen Prozess. In diesem Fall ist es das biologische Konzept der Evolution.
 
 Evolution wird ein biologischer Prozess genannt, der optimale Adaption von Lebensformen an einen bestimmten Lebensraum über mehrere Generationen erlaubt. Dieser Prozess lässt sich in verschiedene Iterationen (Generationen) aufteilen. Jede Iteration kennt verschiedene Phasen, die sie durchläuft, die den Evolutionsvorgang ausmachen:
 
