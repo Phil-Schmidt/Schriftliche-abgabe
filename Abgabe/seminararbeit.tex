@@ -44,7 +44,7 @@ Freie Universit\"at Berlin\\ Institut for Computer Science \\ robert.gottwald@fu
 }
 \maketitle
 \begin{abstract}
-Der folgende Text befasst sich mit der Arbeit der Gruppe Metaheuristiken II des Softwareprojekts Anwendungen von Algorithmen im Wintersemester 2014/15. Dabei werden wir uns mit zwei  spezifischen Metaheuristiken befassen, namentlich Simulated Annealing und ein genetisch-inspiriertes Verfahren, sowie mit dem globalen Lösungsverfahren Branch-and-Bound und seinen Schwierigkeiten für die Anwendung auf unsere Probleme und schließlich zuletzt mit nicht-linearen Optimierungsverfahren unter Zuhilfenahme numerischer Verfahren bezogen auf die gewählten Aufgabenstellungen de Stapelns und des Packens.
+Der folgende Text befasst sich mit der Arbeit der Gruppe Metaheuristiken II des Softwareprojekts Anwendungen von Algorithmen im Wintersemester 2014/15. Dabei werden wir uns mit zwei  spezifischen Metaheuristiken befassen, namentlich Simulated Annealing und ein genetisch-inspiriertes Verfahren, sowie mit dem globalen Lösungsverfahren Branch-and-Bound und seinen Schwierigkeiten für die Anwendung auf unsere Probleme und schließlich zuletzt mit numerischen Verfahren für die nicht-lineare Optimierung, angewendet auf die gewählten Aufgabenstellungen des Stapelns und des Packens.
 
 \end{abstract}
 
@@ -159,8 +159,9 @@ Diese Schwierigkeit findet sich auch bei der Anwendung auf Packen und Stapeln wi
 
 \subsection{Formulierung als nicht-lineares Optimierungsproblem}
 \label{formObjStacking}
+\begin{sloppypar}
 Das Stapelproblem lässt sich als Optimierungsproblem einer nicht-linearen Zielfunktion ohne Nebenbedingungen formulieren. Die Zielfunktion ${f: \mathbb{R}^n \rightarrow \mathbb{R}}$ erhält die Translations-Vektoren und die Rotationswinkel für jedes der gegebenen Polygone als Eingabe und ordnet diesen die Fläche der konvexen Hülle, bzw. der Bounding-Box, zu. Im Zweidimensionalen sind das also drei Parameter für jedes Polygon.
-
+\end{sloppypar}
 \subsection{Lösungs-Verfahren}
 \label{sec:uncon_nonlin_opt}
 
