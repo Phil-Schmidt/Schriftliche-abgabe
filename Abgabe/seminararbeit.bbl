@@ -30,4 +30,9 @@ J.~Nocedal and S.~Wright, \emph{Numerical Optimization}, ser. Springer Series
   in Operations Research.\hskip 1em plus 0.5em minus 0.4em\relax Springer,
   1999.
 
+\bibitem{Conn:2010:LFP:1965037}
+A.~R. Conn, N.~I.~M. Gould, and P.~L. Toint, \emph{Lancelot: A Fortran Package
+  for Large-Scale Nonlinear Optimization (Release A)}, 1st~ed.\hskip 1em plus
+  0.5em minus 0.4em\relax Springer Publishing Company, Incorporated, 2010.
+
 \end{thebibliography}

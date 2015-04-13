@@ -4,6 +4,7 @@
 \usepackage{times}
 \usepackage{float}
 \usepackage{subfigure}
+\usepackage[vlined,ruled,german]{algorithm2e}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{color}
@@ -113,7 +114,9 @@ Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft 
 
 Ein individuelles Mitglied einer Population (Individuum), wird in unserer Implementierung durch einen generischen Typ-Parameter namens 'State' realisiert. (Der im Bezug auf das biologische Konzept nicht ganz aussagekräftige Name 'State' ist an dieser Stelle der einheitlichen Gestaltung der Schnittstellen für die verschiedenen Metaheuristiken geschuldet) Im Zusammenhang mit unserem Algorithmus steht ein solches Individuum für eine (potentiell befriedigende) Lösung des gegebenen Problems. Angewendet auf das Stapel-Problem wäre das beispielsweise eine bestimmte Anordnung von Polygonen.
 
-Die Natürliche Selektion wird in unserem Algorithmus mit Hilfe von Instanzen des generischen 'Survival'-Typs simuliert. Das entsprechende Interface spezifiziert die 'findSurvivors'-Methode, die, ausgehend von der konkreten Implementierung, aus der aktuellen Population diejenigen Individuen auswählt, die schließlich die neue Generation bilden. Ein naheliegender Ansatz für die Implementierung wäre beispielsweise ein Verfahren, das die n fittesten Individuen (also die n aktuell besten Lösungen für das Problem) auswählt. Eine weitere beliebte Möglichkeit stellen randomisierte Auswahlverfahren dar.
+\begin{sloppypar}
+Die natürliche Selektion wird in unserem Algorithmus mit Hilfe von Instanzen des generischen 'Survival'-Typs simuliert. Das entsprechende Interface spezifiziert die 'findSurvivors'-Methode, die, ausgehend von der konkreten Implementierung, aus der aktuellen Population diejenigen Individuen auswählt, die schließlich die neue Generation bilden. Ein naheliegender Ansatz für die Implementierung wäre beispielsweise ein Verfahren, das die n fittesten Individuen (also die n aktuell besten Lösungen für das Problem) auswählt. Eine weitere beliebte Möglichkeit stellen randomisierte Auswahlverfahren dar.
+\end{sloppypar}
 
 Die Berechnung der Güte eines konkreten Individuums erfolgt mit Hilfe einer Bewertungsfunktion, die über das Interface 'ObjectiveFunction' definiert werden kann. Für das Packen und Stapeln entspricht das beispielsweise der Berechnung der Fläche der konvexen Hülle.
 
@@ -155,18 +158,19 @@ Findet sich das nicht, entartet Branch and Bound zu einer einfachen brute-force 
 
 Diese Schwierigkeit findet sich auch bei der Anwendung auf Packen und Stapeln wieder. Branches können zwar generiert werden in dem wir zum Beispiel beim Packen gemeinsame Kanten von Polygonen festlegen, oder die Polygone diskreten, räumlichen Abschnitten zuweisen, jedoch findet sich keine einfache Methode, sinnvolle Schranken für diese Teilprobleme zu berechnen. Natürlich kann beispielsweise der gesamte Flächeninhalt der Polygone als untere Schranke gewählt werden, allerdings ändert sich diese nicht für verschiedene Teilprobleme. Demnach ist Branch and Bound für unseren Anwendungsfall tendenziell ungeeignet.
 
-\section{Nicht-lineare Optimierung mit numerischen Verfahren des Stapelproblems}
+\section{Numerische Verfahren}
 
-\subsection{Formulierung als nicht-lineares Optimierungsproblem}
-\label{formObjStacking}
-\begin{sloppypar}
-Das Stapelproblem lässt sich als Optimierungsproblem einer nicht-linearen Zielfunktion ohne Nebenbedingungen formulieren. Die Zielfunktion ${f: \mathbb{R}^n \rightarrow \mathbb{R}}$ erhält die Translations-Vektoren und die Rotationswinkel für jedes der gegebenen Polygone als Eingabe und ordnet diesen die Fläche der konvexen Hülle, bzw. der Bounding-Box, zu. Im Zweidimensionalen sind das also drei Parameter für jedes Polygon.
-\end{sloppypar}
-\subsection{Lösungs-Verfahren}
+\subsection{Nicht-lineare Optimierung ohne Nebenbedingungen}
 \label{sec:uncon_nonlin_opt}
 
-\subsubsection{Newton-Verfahren}
+\subsubsection{Stapeln als nicht-lineares Optimierungsproblem}
+\label{formObjStacking}
+\begin{sloppypar}
+Das Stapelproblem lässt sich als Optimierungsproblem einer nicht-linearen Zielfunktion ${f: \mathbb{R}^n \rightarrow \mathbb{R}}$ ohne Nebenbedingungen formulieren. Der Eingabevektor der Zielfunktion enthält Translations-Parameter und Rotationswinkel für jedes Polygon. Für $m$ zweidimensionale Polygone hat er also $3m$ Komponenten.
+Die Zielfunktion $f$ ordnet diesem Vektor dann die Fläche der konvexen Hülle bzw. der Bounding-Box zu.
+\end{sloppypar}
 
+\subsubsection{Newton-Verfahren}
 Für derartige Optimierungsprobleme gibt es verschiedene mathematische Verfahren zur numerischen Berechnung lokaler Optima. Viele dieser Verfahren basieren auf dem Newton-Verfahren zum Finden von Nullstellen einer Funktion. Um das Newton-Verfahren zur Optimierung einzusetzen, wendet man es auf die erste Ableitung $f'$ an. Denn an den Nullstellen der ersten Ableitung liegen auch die Extremwerte der Funktion. Allerdings benötigt das Newton-Verfahren auch noch die erste Ableitung der Funktion, auf die es angewendet wird, deshalb wird auch noch die zweite Ableitung $f''$ benötigt, wenn man das Newton-Verfahren zur Optimierung verwendet.
 
 Das Verfahren berechnet die Lösung iterativ. Eine gegebene Lösung $x_n$ wird in jedem Schritt mit der Formel
@@ -192,7 +196,6 @@ Hs_n=-g
 $s_n$ zu berechnen und dann den nächsten Lösungskandidaten ${x_{n+1} = x_n + s_n}$.
 
 \subsubsection{Ableitungen}
-
 Da wir in der Implementierung der Zielfunktion \ref{formObjStacking} die Ableitungen nicht gegeben haben, müssen wir sie numerisch approximieren. Mit der Finite-Differenzen-Methode benötigt die Berechnung der ersten Ableitung zwei Funktionsauswertungen pro Komponente, also insgesamt $2n$ Funktionsauswertungen. Würde man nun die zweite Ableitung $f''$ ebenfalls numerisch approximieren, bräuchte man $2n$ Auswertungen von $f'$, also insgesamt $4n^2$ Auswertungen der ursprünglichen Funktion $f$. Das ist nicht nur sehr aufwendig, sondern auch problematisch für die numerische Stabilität des Verfahrens. Denn die Finite-Differenzen-Methode führt leicht zu Auslöschungen, die bei der Subtraktion fast gleich großer Gleitkommazahlen auftreten.
 
 Außerdem ist die Ableitung der Zielfunktion für das Stapelproblem nicht glatt, denn wenn ein Polygon sich komplett innerhalb der konvexen Hülle befindet, ist die Ableitung bezüglich dessen Translations- und Rotationsparameter null. Sobald das Polygon jedoch so weit verschoben wird, dass es den Rand erreicht, wird die Ableitung positiv, hat also an dieser Stelle einen Knick und die zweite Ableitung ist somit nicht stetig. Beweise für die Konvergenzeigenschaften von Newton-artigen Verfahren setzen jedoch mindestens zweimal stetig differenzierbare Funktionen voraus.
@@ -200,7 +203,6 @@ Außerdem ist die Ableitung der Zielfunktion für das Stapelproblem nicht glatt,
 In der Praxis hat sich jedoch gezeigt, dass es Newton-artige Verfahren zur Optimierung gibt, die gut für nicht-glatte Funktionen funktionieren \cite{DBLP:journals/mp/LewisO13} und ohne zweite Ableitungen auskommen.
 
 \subsubsection{Quasi-Newton Verfahren}
-
 Sogenannte Quasi-Newton Verfahren, sind Newton-artige Verfahren, die die direkte Berechnung der zweiten Ableitung vermeiden. Stattdessen wird eine Approximation der Hesse-Matrix verwaltet, die in jeder Iteration des Algorithmus mithilfe der Informationen der ersten Ableitung weiter der echten Hesse-Matrix angenähert wird. Dafür existieren verschiedene Update-Formeln. Wir verwenden die BFGS Update-Formel, benannt nach ihren Erfindern \textbf{B}royden, \textbf{F}letcher, \textbf{G}oldfarb und \textbf{S}hanno. \cite{nocedal1999numerical}
 \begin{equation*}
 B_n+1 = B_n + \frac{(y_n- B_ns_n) (y_n-B_ns_n)^T}{(y_n- B_n s_n)^T s_n}
@@ -218,7 +220,6 @@ B_{n+1}^{-1} = (I - p_n s_n y_n^T) B_n^{-1} (I - p_n y_n s_n^T) + p_n s_n s_n^T 
 \end{equation}
 
 \subsubsection{Line search}
-
 Für die globale Optimierung mit (Quasi-)Newton-Verfahren ist es oft nicht sinnvoll immer den vollen Schritt $s_n$ zu verwenden, sondern diesen zu skalieren. Die Schrittweite $\alpha$ soll so gewählt werden, dass der Funktionswert möglichst klein wird, also die univariate Funktion
 \begin{equation*}
 \Phi(\alpha) = f(x_n + \alpha s_n)
@@ -227,7 +228,7 @@ minimal wird.
 
 \begin{figure}[ht]
  \centering
- \includegraphics[scale=0.25]{armijo}
+ \includegraphics[width=\textwidth]{armijo}
  \caption{Armijo Bedingung \cite{nocedal1999numerical}}
  \label{img:armijo}
 \end{figure}
@@ -246,70 +247,78 @@ f'(x_n+\alpha*s_n)^T s_n \ge c_2 f'(x_n)^T s_n
 \end{equation}
 Diese Bedingung erzwingt, dass die Funktion im gewählten Punkt nicht mehr so stark abnehmen darf wie im Punkt $x_n$. Wenn nämlich die Steigung in einem Punkt noch stark negativ ist, ist es naheliegend noch weiter in diese Richtung zu gehen. Die Konstante ${c_2\in (c_1,1)}$ kann, wie $c_1$, frei gewählt werden, wobei kleinere Werte die Bedingung verstärken. Wir verwenden die Werte $c_1 = 1e-4$ und $c_2 = 0.9$, da sich durch Experimentieren gezeigt hat, dass strengere Werte die Gesamtlaufzeit eher negativ beeinflussen.
 
-\begin{figure}[ht]
- \centering
- \begin{description}
- \item[Eingabe] Startwert $x_0$, Zielfunktion $f$, maximale Iterationszahl $N$, Konstanten $c_1,c_2$.
- \item[Ausgabe] Eine bessere bzw. lokal optimale Lösung $x_{\text{\tiny{BFGS}}}$.
- \end{description}
- \begin{enumerate}
- 	\item Wähle $u=0$, $v=\infty$ und $\alpha = 1$
- 	\item Wiederhole:
- 	\begin{enumerate}
- 	\item Wenn Bedingung (\ref{eq:armijo}) für $\alpha$ verletzt ist, setze $v=\alpha$
- 	\item Ansonsten wenn Bedingung (\ref{eq:curvature}) für $\alpha$ verletzt ist, setzte $u=\alpha$.
- 	\item Ansonsten gebe $\alpha$ zurück.
- 	\item Wenn $v < \infty$ setze $\alpha = \frac{u+v}{2}$
- 	\item Ansonsten setze $\alpha = 2\alpha$
- 	\end{enumerate}
- \end{enumerate}
- \caption{Line search Algorithmus \cite{DBLP:journals/mp/LewisO13}}
- \label{alg:linesearch}
-\end{figure}
+\begin{algorithm}[H]
+\DontPrintSemicolon{}
+\SetAlgoLined
+\SetKwInOut{Input}{Eingabe}\SetKwInOut{Output}{Ausgabe}
+\Input{Konstanten $c_1,c_2$, Zielfunktion $f$, aktuelle Lösung $x$, Suchrichtung $s$}
+\Output{Eine Schrittweite $\alpha$, die die Wolfe-Bedingungen erfüllt}
+\BlankLine{}
+$u \leftarrow 0$\; $v \leftarrow \infty$\; $\alpha \leftarrow 1$ \;
+\While{\textbf{true}}{
+	\If{Bedingung (\ref{eq:armijo}) ist für $\alpha$ verletzt}{
+		$v \leftarrow \alpha$\;
+	}\ElseIf{Bedingung (\ref{eq:curvature}) ist für $\alpha$ verletzt}{
+		$u \leftarrow \alpha$\;
+	}\Else{
+		\Return $\alpha$\;
+	}
+	\If{$v < \infty$}{
+		$\alpha \leftarrow \frac{u+v}{2}$\;
+	}
+	\Else{
+		$\alpha \leftarrow 2\alpha$\;
+	}
+}
+\caption{Line search \cite{DBLP:journals/mp/LewisO13}}
+\label{alg:linesearch}
+\end{algorithm}
+\vspace{1.5em}
 
 Die Bedingungen (\ref{eq:armijo}) und (\ref{eq:curvature}) zusammen nennt man die Wolfe-Bedingungen. Fügt man zur linken und rechten Seite der Bedingung (\ref{eq:curvature}) noch Beträge hinzu, dann spricht man von den starken Wolfe-Bedingungen. Wir verwenden jedoch die Variante ohne, denn die starken Wolfe-Bedingungen eignen sich nur für glatte Funktionen \cite{DBLP:journals/mp/LewisO13}.
 
-Ein recht einfacher und für nicht-glatte Funktionen geeigneter Algorithmus um einen Punkt zu finden, welcher die Bedingungen (\ref{eq:armijo}) und (\ref{eq:curvature}) erfüllt, ist in Abbildung (\ref{alg:linesearch}) beschrieben. Beginnend mit der Schrittweite $\alpha=1$ verdoppelt er diese solange, bis ein Punkt gefunden wurde, der die Armijo-Bedingung verletzt. Dieser Wert für die Schrittweite wird dann als obere Schranke $v$ gesetzt. Daraufhin wird Bisektion verwendet, um im Intervall $(u,v)$ einen Punkt zu finden, der beide Bedingungen, (\ref{eq:armijo}) und (\ref{eq:curvature}), erfüllt. Immer wenn die Bedingung (\ref{eq:armijo}) verletzt ist, wird in der linken Intervallhälfte weitergesucht und wenn Bedingung (\ref{eq:curvature}) verletzt ist, dann in der rechten Hälfte.
+Ein recht einfacher und für nicht-glatte Funktionen geeigneter Algorithmus um einen Punkt zu finden, welcher die Bedingungen (\ref{eq:armijo}) und (\ref{eq:curvature}) erfüllt, ist \textbf{Algorithmus \ref{alg:linesearch}}. Beginnend mit der Schrittweite $\alpha=1$ verdoppelt er diese solange, bis ein Punkt gefunden wurde, der die Armijo-Bedingung verletzt. Dieser Wert für die Schrittweite wird dann als obere Schranke $v$ gesetzt. Daraufhin wird Bisektion verwendet, um im Intervall $(u,v)$ einen Punkt zu finden, der beide Bedingungen, (\ref{eq:armijo}) und (\ref{eq:curvature}), erfüllt. Immer wenn die Bedingung (\ref{eq:armijo}) verletzt ist, wird in der linken Intervallhälfte weitergesucht und wenn Bedingung (\ref{eq:curvature}) verletzt ist, dann in der rechten Hälfte.
 
-\subsubsection{BFGS-Algorithmus}
-\begin{figure}[ht]
- \centering
- \begin{description}
- \item[Eingabe] Startwert $x_0$, Zielfunktion $f$, maximale Iterationszahl $N$.
- \item[Ausgabe] Eine bessere bzw. lokal optimale Lösung $x_{\text{\tiny{BFGS}}}$
- \end{description}
- \begin{enumerate}
- 	\item Wähle $B_0^{-1}$ positiv Definit (z.B als Identitätsmatrix).
- 	\item Für jedes $i \in [0,N)$:
- 	\begin{enumerate}
- 	\item Berechne $s_i = - B_i^{-1} f'(x_i)$.
- 	\item Wähle $\alpha$ mit dem Algorithmus in Abbildung \ref{alg:linesearch}.
- 	\item Wenn Abbruchbedingung erreicht gebe $x_{\text{\tiny{BFGS}}} = x_i$ zurück.
- 	\item Setzte $x_{i+1} = x_i + \alpha s_i$.
- 	\item Berechne $B_{i+1}^{-1}$ nach Formel (\ref{eq:bfgsinverse}).
- 	\end{enumerate}
- 	\item Gebe $x_{\text{\tiny{BFGS}}} = x_{N-1}$ zurück.
- \end{enumerate}
- \caption{BFGS Algorithmus}
- \label{alg:bfgs}
-\end{figure}
-
-Die BFGS-Updateformel erhält die positive Definitheit der approximierten Hesse-Matrix, wenn der nächste gewählte Punkt die Wolfe-Bedingungen erfüllt. Ist die Hesse-Matrix positiv definit, liefert der Newton-Schritt (\ref{eq:ndimnewtonstep}) garantiert eine Abstiegsrichtung. Der BFGS-Algorithmus, wie wir ihn implementiert haben, funktioniert wie in Abbildung \ref{alg:bfgs} beschrieben.
+\begin{algorithm}[H]
+\DontPrintSemicolon{}
+\SetAlgoLined
+\SetKwInOut{Input}{Eingabe}\SetKwInOut{Output}{Ausgabe}
+\Input{Startwert $x_0$, Zielfunktion $f$, maximale Iterationszahl $N$}
+\Output{Eine bessere bzw. lokal optimale Lösung $x_{\text{\tiny{BFGS}}}$}
+\BlankLine{}
+Wähle $B_0^{-1}$ positiv Definit (z.B als Identitätsmatrix)\;
+\ForEach{$i \in [0,N)$}{
+Berechne $s_i = - B_i^{-1} f'(x_i)$.\;
+Wähle $\alpha$ mit \textbf{Algorithmus \ref{alg:linesearch}}\;
+\If{Abbruchbedingung erreicht}{
+\KwRet $x_{\text{\tiny{BFGS}}} = x_i$\;
+}
+$x_{i+1} \leftarrow x_i + \alpha s_i$.\;
+Berechne $B_{i+1}^{-1}$ nach Formel (\ref{eq:bfgsinverse})\;
+}
+\KwRet $x_{\text{\tiny{BFGS}}} = x_{N-1}$\;
+\caption{BFGS Algorithmus}
+\label{alg:bfgs}
+\end{algorithm}
+\vspace{1.5em}
+Die BFGS-Updateformel erhält die positive Definitheit der approximierten Hesse-Matrix, wenn der nächste gewählte Punkt die Wolfe-Bedingungen erfüllt. Ist die Hesse-Matrix positiv definit, liefert der Newton-Schritt (\ref{eq:ndimnewtonstep}) garantiert eine Abstiegsrichtung. \textbf{Algorithmus \ref{alg:bfgs}} zeigt den BFGS-Algorithmus, wie wir ihn implementiert haben.
 Der Algorithmus terminiert wenn die maximale Iterationszahl erreicht wurde, oder wenn die Abbruchbedingung, z.B. dass der Line search Algorithmus keinen geeigneten Schritt mehr findet, erfüllt ist.
 
-\section{Nicht-lineare Optimierung mit numerischen Verfahren des Packproblems}
+\subsection{Nicht-lineare Optimierung mit Nebenbedingungen}
 \label{sec:cons_nonlin_opt}
-Das Packproblem benötigt im Gegensatz zu dem Stapelproblem noch Nebenbedingungen. Und zwar, dass für jedes Paar von Polygonen $i,j$ mit $i \neq j$ die Überlappungsfläche $c_{ij}=0$ ist. Für die nicht-lineare Optimierung unter Nebenbedingung gibt es verschiedene Ansätze.
+
+\subsubsection{Packen als nicht-lineares Optimierungsproblem}
+Zur Formulierung des Packproblems werden, im Gegensatz zu dem Stapelproblem, auch Nebenbedingungen benötigt. Und zwar, dass für jedes Paar von Polygonen $i,j$ mit $i \neq j$ die Überlappungsfläche $c_{ij}=0$ ist. Für die nicht-lineare Optimierung mit Nebenbedingungen gibt es verschiedene Ansätze.
 
 \begin{sloppypar}
-Im Rahmen des Softwareprojekts kamen Penalty-, Barriere-, und augmentierte Lagrange-Verfahren in Frage, da diese nicht zu Komplex sind und trotzdem gute Ergebnisse möglich sind \cite{nocedal1999numerical}. Diese Verfahren haben gemeinsam, dass sie die Nebenbedingungen behandeln, indem sie der Zielfunktion zusätzliche Terme hinzufügen und dann eine Folge von nicht-linearen Optimierungsproblemen ohne Nebenbedingungen auf dieser Zielfunktion lösen. Der Vorteil dabei ist, dass die Algorithmen aus Abschnitt \ref{sec:uncon_nonlin_opt} wiederverwendet werden können, um die Teilprobleme zu lösen.
+Im Rahmen des Softwareprojekts kamen Penalty-, Barriere-, und augmentierte Lagrange-Verfahren in Frage, da diese nicht zu Komplex sind und trotzdem gute Ergebnisse möglich sind \cite{nocedal1999numerical}. Diese Verfahren haben gemeinsam, dass sie die Nebenbedingungen behandeln, indem sie zusätzliche Terme in die Zielfunktion einfügen und dann eine Folge von nicht-linearen Optimierungsproblemen ohne Nebenbedingungen auf dieser modifizierten Zielfunktion lösen. Der Vorteil dabei ist, dass die Algorithmen aus Abschnitt \ref{sec:uncon_nonlin_opt} wiederverwendet werden können, um die Teilprobleme zu lösen.
 \end{sloppypar}
 
 Für das Packproblem haben wir Barriere-Verfahren als weniger gut geeignet eingestuft. Barriere-Verfahren arbeiten mit Bestrafungs-Termen, die schon groß werden, wenn die Lösung sich einer ungültigen Lösung annähert. So wird eine Suche durch den Raum der gültigen Lösungen ausgeführt. Im Packproblem sind jedoch gerade die Lösungen optimal, bei denen sich zwei Polygone berühren, also durch die Barriere-Terme schon unendlich stark bestraft werden.
 
-Das Penalty-Verfahren funktioniert ebenfalls mit Bestrafungs-Termen in der Zielfunktion, welche jedoch erst ansteigen, wenn die Nebenbedingung auch tatsächlich verletzt ist. Bei beiden Verfahren gibt es jedoch numerische Schwierigkeiten \cite{nocedal1999numerical}. Das augmentierte Lagrange-Verfahren basiert auf dem Penalty-Verfahren, erweitert die Zielfunktion jedoch noch um zusätzliche Terme, die die numerische Stabilität des Verfahrens verbessern. Vor diesem Hintergrund haben wir uns schließlich für die Implementierung des augmentierten Lagrange-Verfahrens entschieden.
+Das Penalty-Verfahren funktioniert ebenfalls mit Bestrafungs-Termen in der Zielfunktion, welche aber erst ansteigen, wenn die Nebenbedingungen auch tatsächlich verletzt sind. Bei beiden Verfahren gibt es jedoch numerische Schwierigkeiten \cite{nocedal1999numerical}. Das augmentierte Lagrange-Verfahren basiert auf dem Penalty-Verfahren, erweitert die Zielfunktion noch um einen zusätzlichen Term, der die numerische Stabilität des Verfahrens verbessert. Auch gibt es bereits Software, die dieses Verfahren implementiert und gut zu funktionieren scheint \cite{Conn:2010:LFP:1965037}. Vor diesem Hintergrund haben wir uns schließlich für das augmentierte Lagrange-Verfahren entschieden.
 
-\subsection{Augmentiertes Lagrange-Verfahren}
+\subsubsection{Augmentiertes Lagrange-Verfahren}
 Das Verfahren fügt zwei Terme zur Zielfunktion hinzu, so dass sie die folgende Form hat.
 \begin{equation}
 \label{eq:aug_lagrangian}
@@ -331,44 +340,50 @@ Für gewöhnlich ist $\mu$ Anfangs groß. Verletzungen der Nebenbedingungen werd
 
 Diesen Prozess kann man gut in Abbildung \ref{fig:packing} beobachten. Dort sieht man eine Serie von Bildern ausgewählter Iterationen einer Ausführung des Algorithmus. Die Bilder wurden mithilfe der Option erstellt, die Animationen während der Ausführung des Algorithmus als GIF zu exportieren. Sie stellen also eine tatsächliche Ausführung des Algorithmus in der Abgabeversion des Softwareprojekts dar. Iterationen, in denen der Fortschritt nicht gut sichtbar ist, wurden ausgelassen. Unter den Bildern ist die Fläche der konvexen Hülle unter der Bezeichnung $f$, wie in Abschnitt \ref{formObjStacking}, angegeben, sowie die Summe der paarweisen Überlappungsflächen $\sum c_{ij}$.
 
-\subsection{Ableitungen}
+\subsubsection{Ableitungen}
 Um die Ableitung der Zielfunktion (\ref{eq:aug_lagrangian}) zu berechnen ist es wichtig, nicht die gesamte Funktion numerisch abzuleiten. Denn durch die Skalierung mit $\mu$ und $\lambda$ ist so keine hinreichend genaue Ableitung der Nebenbedingungen möglich. Stattdessen verwenden wir die Formel \cite{nocedal1999numerical}
 \begin{equation*}
 \mathcal{L}(x,\lambda,\mu)' = f'(x) - \sum_{\{i,j\}\in {P \choose 2}}(\lambda_{ij} - c_{ij}(x)/\mu) c_{ij}'(x)
 \end{equation*}
 Dabei berechnen wir $f'(x)$ numerisch, wie in Abschnitt \ref{sec:uncon_nonlin_opt}, und $c_{ij}'(x)$ ebenfalls. Dafür nutzen wir die besondere Struktur von $c_{ij}'(x)$ aus: Es sind nur sechs Einträge nicht null, nämlich die Translations- und Rotationsparameter von Polygon $i$ und $j$. Zusätzlich sind die Ableitungen nach den Translationsparametern von Polygon $i$ die negierten Werte der Parameter von Polygon $j$, denn wenn die Überlappung durch Verschiebung in positiver $x$-Richtung von Polygon $i$ kleiner wird, muss sie durch Verschiebung in negativer $x$-Richtung von Polygon $j$ um denselben Wert kleiner werden. Dadurch müssen nur vier Einträge des Ableitungsvektors $c_{ij}'(x)$ pro Nebenbedingung tatsächlich berechnet werden.
+\vspace{1.5em}
 
-\subsection{Algorithmus}
-\subsubsection{Augmentierter Lagrange-Algorithmus}
-\begin{figure}[ht]
- \centering
- \begin{description}
- \item[Eingabe] Startwert $x_0$, Zielfunktion $f$, Nebenbedingungen $c_ij$ maximale Iterationszahl $N$.
- \item[Ausgabe] Eine gültig, bzw. nahezu gültige lokal optimale Packung $x_{\text{\tiny{PACK}}}$
- \end{description}
- \begin{enumerate}
- 	\item $\mu = 10^6$
- 	\item Setze alle $lambda_{ij}$ auf $0$
- 	\item Für jedes $i \in [0,N)$:
- 	\begin{enumerate}
- 	\item Sei $f'(x) := \mathcal{L}(x, \lambda, \mu)$
- 	\item Berechne $x_{i+1} = BFGS(x_0=x_i, f=f', N=500)$.
- 	\item Wenn Lösung gültig gebe $x_{\text{\tiny{PACK}}} = x_{i+1}$ zurück
- 	\item Setze $\mu = 0.5\mu $
- 	\item Berechne mit Formel (\ref{eq:update_lagrange_mult}) neue Werte für alle $\lambda_{ij}$
- 	\end{enumerate}
- 	\item Gebe $x_{\text{\tiny{PACK}}} = x_{N-1}$ zurück.
- \end{enumerate}
- \caption{Augmentierter Lagrange-Algorithmus}
- \label{alg:lagrange}
-\end{figure}
+\begin{algorithm}[H]
+\DontPrintSemicolon{}
+\SetAlgoLined
+\SetKwInOut{Input}{Eingabe}\SetKwInOut{Output}{Ausgabe}
+\Input{Startwert $x_0$, Zielfunktion $f$, Nebenbedingungen $c_ij$ maximale Iterationszahl $N$}
+\Output{Eine gültig, bzw. nahezu gültige lokal optimale Packung $x_{\text{\tiny{PACK}}}$}
+\BlankLine{}
+$\mu = 10^6$\;
+\ForEach{$c_{ij}$}{
+	$\lambda_{ij} \leftarrow 0$\;
+}
+\ForEach{$i \in [0,N)$}{
+	Sei $g(x) := \mathcal{L}(x, \lambda, \mu)$\;
+	$x_{i+1} \leftarrow BFGS(x_0=x_i, f=g, N=500)$\;
+	\If{Lösung gültig für gewünschte Genauigkeit}{
+		\Return $x_{\text{\tiny{PACK}}} = x_{i+1}$ 
+	}
+	$\mu \leftarrow 0.5\mu$\;
+	\ForEach{$c_{ij}$}{
+		Update $\lambda_{ij}$ nach Formel (\ref{eq:update_lagrange_mult})\;
+	}
+}
+\Return $x_{\text{\tiny{PACK}}} = x_{N-1}$\;
+\caption{Augmentierter Lagrange-Algorithmus}
+\label{alg:lagrange}
+\end{algorithm}
+\vspace{1.5em}
+\subsubsection{Algorithmus}
+Wie wir das augmentierte Lagrange-Verfahren zum Lösen des Packproblems implementiert haben, ist in \textbf{Algorithmus \ref{alg:lagrange}} zu sehen. Unsere Implementierung funktioniert jedoch nicht immer zuverlässig. Das ist dem Umstand geschuldet, dass für eine der komplexesten Funktionen der Geometrie-Gruppen, nämlich die Überlappungsfläche zweier Polygone zu berechnen, nicht genug Zeit war diese ausgiebig zu testen. Diese Funktion ist jedoch essentiell für dieses Verfahren, denn wenn es während der Ausführung zu Auswertungsfehlern der Überlappungsfläche kommt, so können riesige Werte in den Ableitungen der Nebenbedingungen entstehen.
 
-Abbildung \ref{alg:lagrange} beschreibt, wie wir das augmentierte Lagrange-Verfahren zum Lösen des Packproblems implementiert haben. Der Algorithmus funktioniert jedoch nicht immer zuverlässig. Das ist dem Umstand geschuldet, dass für eine der komplexesten Funktionen der Geometrie-Gruppen, nämlich die Überlappungsfläche zweier Polygone zu berechnen, nicht genug Zeit war diese ausgiebig zu testen. Diese Funktion ist jedoch essentiell für dieses Verfahren, denn wenn es während der Ausführung zu Auswertungsfehlern dieser Funktion kommt, so können riesige Werte in den Ableitungen der Nebenbedingungen entstehen. Das kann dann dazu führen, dass der Algorithmus nicht nachvollziehbare Schritte wählt oder stecken bleibt. In einer Implementierung wird z.B. die Überlappungsfläche $0$ zurückgegeben, wenn ein Polygon in einem anderen komplett enthalten ist. Wenn der Algorithmus erfolgreich durchläuft, sind jedoch oft vielversprechende Ergebnisse zu beobachten. Um den Nachteil zu umgehen, dass die numerischen Verfahren nur lokale Optima finden können, wäre es auch denkbar, diese mit klassischen Metaheuristiken zu kombinieren.
+Das kann dann dazu führen, dass nicht nachvollziehbare Schritte gewählt werden oder das Programm in ungültigen Konfigurationen stecken bleibt. In einer Implementierung dieser Funktion wird z.B. die Überlappungsfläche $0$ zurückgegeben, wenn ein Polygon in einem anderen komplett enthalten ist. Wenn der Algorithmus erfolgreich durchläuft, sind jedoch oft vielversprechende Ergebnisse zu beobachten. Um den Nachteil zu umgehen, dass die numerischen Verfahren nur lokale Optima finden können, wäre es auch denkbar, diese mit klassischen Metaheuristiken zu kombinieren.
 
 \floatstyle{ruled}
 \restylefloat{figure}
 \renewcommand*{\thesubfigure}{}
-\begin{figure}
+\begin{figure}[ht]
 \subfigure[Startkonfiguration:\newline\hspace*{1.5em}${f=174675.7631}$, ${\sum c_{ij}=158.7219}$]{\includegraphics[width=0.49\textwidth]{iter1}}\hfill
 \subfigure[Iteration 1 (${\mu=10^6}$):\newline\hspace*{1.5em}${f=15084.4567}$, ${\sum c_{ij} = 64343.8222}$]{\includegraphics[width=0.49\textwidth]{iter2}}\\
 \subfigure[Iteration 6 (${\mu=31250}$):\newline\hspace*{1.5em}${f=15087.5107}$, ${\sum c_{ij} = 51559.7376}$]{\includegraphics[width=0.49\textwidth]{iter7}}\hfill
