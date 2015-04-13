@@ -33,14 +33,14 @@ K.~Weicker, \emph{Evolution{\"a}re Algorithmen}.\hskip 1em plus 0.5em minus
 G.~Scheithauer, \emph{Zuschnitt-und Packungsoptimierung}.\hskip 1em plus 0.5em
   minus 0.4em\relax Springer, 2008.
 
-\bibitem{DBLP:journals/mp/LewisO13}
-A.~S. Lewis and M.~L. Overton, ``Nonsmooth optimization via quasi-newton
-  methods,'' \emph{Math. Program.}, vol. 141, no. 1-2, pp. 135--163, 2013.
-
 \bibitem{nocedal1999numerical}
 J.~Nocedal and S.~Wright, \emph{Numerical Optimization}, ser. Springer Series
   in Operations Research.\hskip 1em plus 0.5em minus 0.4em\relax Springer,
   1999.
+
+\bibitem{DBLP:journals/mp/LewisO13}
+A.~S. Lewis and M.~L. Overton, ``Nonsmooth optimization via quasi-newton
+  methods,'' \emph{Math. Program.}, vol. 141, no. 1-2, pp. 135--163, 2013.
 
 \bibitem{Conn:2010:LFP:1965037}
 A.~R. Conn, N.~I.~M. Gould, and P.~L. Toint, \emph{Lancelot: A Fortran Package
