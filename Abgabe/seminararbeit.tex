@@ -66,7 +66,7 @@ In unserem Softwareprojekt bestehen Metaheuristikmodule aus generischen Klassen 
 
 \subsection{Inspiration}
 
-Metaheuristiken liegen zumeist realen Prozessen zugrunde, welche ein bestimmtes Verhalten aufweisen. Simulated Annealing ist vom namensgebenden Annealing-Prozess aus der Schwerindustrie inspiriert.
+\cite{1983Sci...220..671K} Metaheuristiken liegen zumeist realen Prozessen zugrunde, welche ein bestimmtes Verhalten aufweisen. Simulated Annealing ist vom namensgebenden Annealing-Prozess aus der Schwerindustrie inspiriert.
 
 Beim Annealing wird  Metall stark erhitzt und über einen längeren Zeitraum langsam abgekühlt. Bei den hohen Temperaturen tritt eine starke Molekular-Bewegung im zu bearbeitenden Material auf. Dadurch, dass der Abkühlungsprozess über einen längeren Zeitraum gestreckt wird, reduziert sich die Teilchenbewegung auch nur allmählich. Der Abkühlungsprozess wird so durch etwaige Behandlungsmethoden gesteuert, dass die einzelnen Teilchen einen für einen bestimmten zu erzielenden Effekt, wie zum Beispiel eine stabile Statik, guten Zustand einnehmen.
 
@@ -96,7 +96,7 @@ Dieser Prozess wird solange fortgeführt, bis entweder eine feste Iterationsanza
 
 \subsection{Inspiration}
 
-Ähnlich wie beim Simulated Annealing gibt es für den folgenden genetischen Algorithmus Inspiration durch einen real-weltlichen Prozess. In diesem Fall ist es das biologische Konzept der Evolution.
+\cite{weicker2007evolutionare} Ähnlich wie beim Simulated Annealing gibt es für den folgenden genetischen Algorithmus Inspiration durch einen real-weltlichen Prozess. In diesem Fall ist es das biologische Konzept der Evolution.
 
 Evolution wird ein biologischer Prozess genannt, der optimale Adaption von Lebensformen an einen bestimmten Lebensraum über mehrere Generationen erlaubt. Dieser Prozess lässt sich in verschiedene Iterationen (Generationen) aufteilen. Jede Iteration kennt verschiedene Phasen, die sie durchläuft, die den Evolutionsvorgang ausmachen:
 
@@ -137,7 +137,7 @@ Aus einem initial gegeben 'State' wird zunächst mit Hilfe von Mutationen die Au
 
 \section{Branch and Bound}
 
-Branch and Bound ist ein Entwurfsmuster für Lösungsalgorithmen von Optimierungsproblemen. Unserer Gruppe wurde von Veranstalterseite empfohlen, uns mit diesem System zu befassen und  die Möglichkeiten, einer Anwendung der Branch and Bound Methode zur Konstruktion eines Algorithmus für die Bearbeitung des Stapel- oder Packen-Problems, einzuschätzen.
+Branch and Bound ist ein Entwurfsmuster für Lösungsalgorithmen von Optimierungsproblemen. Unserer Gruppe wurde von Veranstalterseite empfohlen, uns mit diesem System zu befassen und die Möglichkeiten, einer Anwendung der Branch and Bound Methode zur Konstruktion eines Algorithmus für die Bearbeitung des Stapel- oder Packen-Problems, einzuschätzen.
 
 In den folgenden beiden Abschnitten werden wir das generelle Entwurfsschema Branch and Bound erläutern und seine Tauglichkeit für die Behandlung der Problemstellungen des Projekts evaluieren.
 
@@ -156,7 +156,7 @@ Sollten nun bei einem Minimierungsproblem, wie unserem, Teilprobleme/Zweige mit 
 Branch and Bound lässt sich theoretisch auf jede Art von Problem anwenden, jedoch stellt sich stets die Frage, ob für eine Zerlegung Schranken gefunden werden können, die scharf genug sind, um die Suche auf eine Teilmenge einzuschränken, die klein genug ist. 
 Findet sich das nicht, entartet Branch and Bound zu einer einfachen brute-force Suche durch den Lösungsraum nach einer guten Lösung.
 
-Diese Schwierigkeit findet sich auch bei der Anwendung auf Packen und Stapeln wieder. Branches können zwar generiert werden in dem wir zum Beispiel beim Packen gemeinsame Kanten von Polygonen festlegen, oder die Polygone diskreten, räumlichen Abschnitten zuweisen, jedoch findet sich keine einfache Methode, sinnvolle Schranken für diese Teilprobleme zu berechnen. Natürlich kann beispielsweise der gesamte Flächeninhalt der Polygone als untere Schranke gewählt werden, allerdings ändert sich diese nicht für verschiedene Teilprobleme. Demnach ist Branch and Bound für unseren Anwendungsfall tendenziell ungeeignet.
+Diese Schwierigkeit findet sich auch bei der Anwendung auf Packen und Stapeln wieder. Branches können zwar generiert werden in dem wir zum Beispiel beim Packen gemeinsame Kanten von Polygonen festlegen, oder die Polygone diskreten, räumlichen Abschnitten zuweisen, jedoch findet sich keine einfache Methode, sinnvolle Schranken für diese Teilprobleme zu berechnen. Natürlich kann beispielsweise der gesamte Flächeninhalt der Polygone als untere Schranke gewählt werden, allerdings ändert sich diese nicht für verschiedene Teilprobleme. Demnach ist Branch and Bound für unseren Anwendungsfall tendenziell ungeeignet. Nur für den Spezialfall der optimalen Packung von Rechtecken unter Translation ist ein Branch-and-Bound-Algorithmus beschrieben. \cite{scheithauer2008zuschnitt}
 
 \section{Numerische Verfahren}
 

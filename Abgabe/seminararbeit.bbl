@@ -21,6 +21,18 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{1983Sci...220..671K}
+S.~{Kirkpatrick}, C.~D. {Gelatt}, and M.~P. {Vecchi}, ``{Optimization by
+  Simulated Annealing},'' \emph{Science}, vol. 220, pp. 671--680, May 1983.
+
+\bibitem{weicker2007evolutionare}
+K.~Weicker, \emph{Evolution{\"a}re Algorithmen}.\hskip 1em plus 0.5em minus
+  0.4em\relax Springer-Verlag, 2007.
+
+\bibitem{scheithauer2008zuschnitt}
+G.~Scheithauer, \emph{Zuschnitt-und Packungsoptimierung}.\hskip 1em plus 0.5em
+  minus 0.4em\relax Springer, 2008.
+
 \bibitem{DBLP:journals/mp/LewisO13}
 A.~S. Lewis and M.~L. Overton, ``Nonsmooth optimization via quasi-newton
   methods,'' \emph{Math. Program.}, vol. 141, no. 1-2, pp. 135--163, 2013.
