@@ -62,7 +62,7 @@ Metaheuristiken stellen nützliche Werkzeuge dar, um Optimierungsprobleme in kom
 In unserem Softwareprojekt bestehen Metaheuristikmodule aus generischen Klassen mit einem Typenparameter für die Anwendungsdomäne sowie mindestens einer Auswertungsfunktion. Einzelne Implementierungen werden in den Folgekapiteln beschrieben.
 
 
-\section{Simulated Annealing\textnormal{\normalsize\cite{1983Sci...220..671K}}}
+\section{Simulated Annealing}
 
 \subsection{Inspiration}
 
@@ -70,7 +70,7 @@ Metaheuristiken liegen zumeist realen Prozessen zugrunde, welche ein bestimmtes 
 
 Beim Annealing wird  Metall stark erhitzt und über einen längeren Zeitraum langsam abgekühlt. Bei den hohen Temperaturen tritt eine starke Molekular-Bewegung im zu bearbeitenden Material auf. Dadurch, dass der Abkühlungsprozess über einen längeren Zeitraum gestreckt wird, reduziert sich die Teilchenbewegung auch nur allmählich. Der Abkühlungsprozess wird so durch etwaige Behandlungsmethoden gesteuert, dass die einzelnen Teilchen einen für einen bestimmten zu erzielenden Effekt, wie zum Beispiel eine stabile Statik, guten Zustand einnehmen.
 
-Wie der Name uns sagt, ist die Herangehensweise beim Simulated Annealing nun so, dass wir einen derartigen physikalischen Prozess über einen abstrakten Wertebereich simulieren.
+Wie der Name uns sagt, ist die Herangehensweise beim Simulated Annealing nun so, dass wir einen derartigen physikalischen Prozess über einen abstrakten Wertebereich simulieren. \cite{1983Sci...220..671K}
 
 \subsection{Simulation}
 
@@ -92,7 +92,7 @@ Für die Bestimmung des neuen current-Zustandes wird eine zufällige Zahl zwisch
 
 Dieser Prozess wird solange fortgeführt, bis entweder eine feste Iterationsanzahl erreicht ist, oder die Lösung 'gut'-genug ist. Unsere Implementierung terminiert einfach nach einer festen Schrittzahl.
 
-\section{Genetische Heuristik \textnormal{\normalsize\cite{weicker2007evolutionare}}}
+\section{Genetische Heuristik}
 
 \subsection{Inspiration}
 
@@ -108,7 +108,7 @@ Evolution wird ein biologischer Prozess genannt, der optimale Adaption von Leben
 	\item[Mutation] \hfill \\ Im Vorgang der Gen-Rekombination kann es vorkommen, dass Reproduktionsfehler auftreten. Die Folge davon ist, dass die Nachkommen Gen-Eigenschaften haben können, die nicht Teil des ursprünglichen Genpools der Elterngeneration waren. Diese Mutationen treten zufällig auf und haben ebenso willkürliche Auswirkungen.
 \end{description}
 
-Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft diese Generation erneut den selben Prozess. Dabei verbessert sich langfristig das Gen-Material in Bezug auf den Selektionsdruck des bestehenden Ökosystems. Der folgende Algorithmus versucht sich daran,  ein derartiges Ökosystem mit verschiedenen Populationen zu simulieren, um einen ähnlichen Optimierungsprozess zu erzielen.
+Nachdem durch diesen Prozess eine neue Generation erschaffen wurde, durchläuft diese Generation erneut den selben Prozess. Dabei verbessert sich langfristig das Gen-Material in Bezug auf den Selektionsdruck des bestehenden Ökosystems. Der folgende Algorithmus versucht sich daran,  ein derartiges Ökosystem mit verschiedenen Populationen zu simulieren, um einen ähnlichen Optimierungsprozess zu erzielen. \cite{weicker2007evolutionare}
 
 \subsection{Simulation}
 
@@ -158,7 +158,7 @@ Findet sich das nicht, entartet Branch and Bound zu einer einfachen brute-force 
 
 Diese Schwierigkeit findet sich auch bei der Anwendung auf Packen und Stapeln wieder. Branches können zwar generiert werden in dem wir zum Beispiel beim Packen gemeinsame Kanten von Polygonen festlegen, oder die Polygone diskreten, räumlichen Abschnitten zuweisen, jedoch findet sich keine einfache Methode, sinnvolle Schranken für diese Teilprobleme zu berechnen. Natürlich kann beispielsweise der gesamte Flächeninhalt der Polygone als untere Schranke gewählt werden, allerdings ändert sich diese nicht für verschiedene Teilprobleme. Demnach ist Branch and Bound für unseren Anwendungsfall tendenziell ungeeignet. Nur für den Spezialfall der optimalen Packung von Rechtecken unter Translation ist ein Branch-and-Bound-Algorithmus beschrieben. \cite{scheithauer2008zuschnitt}
 
-\section{Numerische Verfahren \textnormal{\normalsize\cite{nocedal1999numerical}}}
+\section{Numerische Verfahren}
 
 \subsection{Nicht-lineare Optimierung ohne Nebenbedingungen}
 \label{sec:uncon_nonlin_opt}
@@ -171,7 +171,7 @@ Die Zielfunktion $f$ ordnet diesem Vektor dann die Fläche der konvexen Hülle b
 \end{sloppypar}
 
 \subsubsection{Newton-Verfahren}
-Für derartige Optimierungsprobleme gibt es verschiedene mathematische Verfahren zur numerischen Berechnung lokaler Optima. Viele dieser Verfahren basieren auf dem Newton-Verfahren zum Finden von Nullstellen einer Funktion. Um das Newton-Verfahren zur Optimierung einzusetzen, wendet man es auf die erste Ableitung $f'$ an. Denn an den Nullstellen der ersten Ableitung liegen auch die Extremwerte der Funktion. Allerdings benötigt das Newton-Verfahren auch noch die erste Ableitung der Funktion, auf die es angewendet wird, deshalb wird auch noch die zweite Ableitung $f''$ benötigt, wenn man das Newton-Verfahren zur Optimierung verwendet.
+\cite{nocedal1999numerical} Für derartige Optimierungsprobleme gibt es verschiedene mathematische Verfahren zur numerischen Berechnung lokaler Optima. Viele dieser Verfahren basieren auf dem Newton-Verfahren zum Finden von Nullstellen einer Funktion. Um das Newton-Verfahren zur Optimierung einzusetzen, wendet man es auf die erste Ableitung $f'$ an. Denn an den Nullstellen der ersten Ableitung liegen auch die Extremwerte der Funktion. Allerdings benötigt das Newton-Verfahren auch noch die erste Ableitung der Funktion, auf die es angewendet wird, deshalb wird auch noch die zweite Ableitung $f''$ benötigt, wenn man das Newton-Verfahren zur Optimierung verwendet.
 
 Das Verfahren berechnet die Lösung iterativ. Eine gegebene Lösung $x_n$ wird in jedem Schritt mit der Formel
 \begin{equation*}
@@ -198,7 +198,7 @@ $s_n$ zu berechnen und dann den nächsten Lösungskandidaten ${x_{n+1} = x_n + s
 \subsubsection{Ableitungen}
 Da wir in der Implementierung der Zielfunktion \ref{formObjStacking} die Ableitungen nicht gegeben haben, müssen wir sie numerisch approximieren. Mit der Finite-Differenzen-Methode benötigt die Berechnung der ersten Ableitung zwei Funktionsauswertungen pro Komponente, also insgesamt $2n$ Funktionsauswertungen. Würde man nun die zweite Ableitung $f''$ ebenfalls numerisch approximieren, bräuchte man $2n$ Auswertungen von $f'$, also insgesamt $4n^2$ Auswertungen der ursprünglichen Funktion $f$. Das ist nicht nur sehr aufwendig, sondern auch problematisch für die numerische Stabilität des Verfahrens. Denn die Finite-Differenzen-Methode führt leicht zu Auslöschungen, die bei der Subtraktion fast gleich großer Gleitkommazahlen auftreten.
 
-Außerdem ist die Ableitung der Zielfunktion für das Stapelproblem nicht glatt, denn wenn ein Polygon sich komplett innerhalb der konvexen Hülle befindet, ist die Ableitung bezüglich dessen Translations- und Rotationsparameter null. Sobald das Polygon jedoch so weit verschoben wird, dass es den Rand erreicht, wird die Ableitung positiv, hat also an dieser Stelle einen Knick und die zweite Ableitung ist somit nicht stetig. Beweise für die Konvergenzeigenschaften von Newton-artigen Verfahren setzen jedoch mindestens zweimal stetig differenzierbare Funktionen voraus.
+Außerdem ist die Ableitung der Zielfunktion für das Stapelproblem nicht glatt, denn wenn ein Polygon sich komplett innerhalb der konvexen Hülle befindet, ist die Ableitung bezüglich dessen Translations- und Rotationsparameter null. Sobald das Polygon jedoch so weit verschoben wird, dass es den Rand erreicht, wird die Ableitung positiv, hat also an dieser Stelle einen Knick und die zweite Ableitung ist somit nicht stetig. Beweise für die Konvergenzeigenschaften von Newton-artigen Verfahren setzen jedoch mindestens zweimal stetig differenzierbare Funktionen voraus. \cite{nocedal1999numerical}
 
 In der Praxis hat sich jedoch gezeigt, dass es Newton-artige Verfahren zur Optimierung gibt, die gut für nicht-glatte Funktionen funktionieren \cite{DBLP:journals/mp/LewisO13} und ohne zweite Ableitungen auskommen.
 
@@ -215,7 +215,7 @@ s_n := x_{n+1} - x_n = -B_n^{-1}*g\\
 y_k := f'(x_{n+1}) - f'(x_n)
 \end{equation*}
 
-Außerdem gibt es noch eine Variante der Formel, um direkt die inverse Hesse-Matrix zu approximieren. Das hat den Vorteil, dass der Quasi-Newton-Schritt wie in Gleichung (\ref{eq:ndimnewtonstep}) berechnet werden kann und daher kein lineares Gleichungssystem in jedem Schritt gelöst werden muss wie in Gleichung (\ref{eq:newtonlineq}). Diese Variante verwenden wir auch in unserer Implementierung des BFGS-Verfahrens.
+Außerdem gibt es noch eine Variante der Formel, um direkt die inverse Hesse-Matrix zu approximieren. Das hat den Vorteil, dass der Quasi-Newton-Schritt wie in Gleichung (\ref{eq:ndimnewtonstep}) berechnet werden kann und daher kein lineares Gleichungssystem in jedem Schritt gelöst werden muss wie in Gleichung (\ref{eq:newtonlineq}). Diese Variante verwenden wir auch in unserer Implementierung des BFGS-Verfahrens. \cite{nocedal1999numerical}
 \begin{equation}
 \label{eq:bfgsinverse}
 B_{n+1}^{-1} = (I - p_n s_n y_n^T) B_n^{-1} (I - p_n y_n s_n^T) + p_n s_n s_n^T \\ p_n = \frac{1}{y_n^Ts_n}
@@ -247,7 +247,7 @@ Die gestrichelte Linie in Abbildung \ref{img:armijo} veranschaulicht die Armijo-
 \label{eq:curvature}
 f'(x_n+\alpha*s_n)^T s_n \ge c_2 f'(x_n)^T s_n
 \end{equation}
-Diese Bedingung erzwingt, dass die Funktion im gewählten Punkt nicht mehr so stark abnehmen darf wie im Punkt $x_n$. Wenn nämlich die Steigung in einem Punkt noch stark negativ ist, ist es naheliegend, noch weiter in diese Richtung zu gehen. Die Konstante ${c_2\in (c_1,1)}$ kann, wie $c_1$, frei gewählt werden, wobei kleinere Werte die Bedingung verstärken. Wir verwenden die Werte $c_1 = 1e-4$ und $c_2 = 0.9$, da sich durch Experimentieren gezeigt hat, dass strengere Werte die Gesamtlaufzeit eher negativ beeinflussen.
+Diese Bedingung erzwingt, dass die Funktion im gewählten Punkt nicht mehr so stark abnehmen darf wie im Punkt $x_n$. Wenn nämlich die Steigung in einem Punkt noch stark negativ ist, ist es naheliegend, noch weiter in diese Richtung zu gehen. Die Konstante ${c_2\in (c_1,1)}$ kann, wie $c_1$, frei gewählt werden, wobei kleinere Werte die Bedingung verstärken. Wir verwenden die Werte $c_1 = 1e-4$ und $c_2 = 0.9$, da sich durch Experimentieren gezeigt hat, dass strengere Werte die Gesamtlaufzeit eher negativ beeinflussen. \cite{nocedal1999numerical}
 
 \begin{algorithm}[H]
 \DontPrintSemicolon{}
@@ -277,7 +277,7 @@ $u \leftarrow 0$\; $v \leftarrow \infty$\; $\alpha \leftarrow 1$ \;
 \end{algorithm}
 \vspace{1.5em}
 
-Die Bedingungen (\ref{eq:armijo}) und (\ref{eq:curvature}) zusammen nennt man die Wolfe-Bedingungen. Fügt man zur linken und rechten Seite der Bedingung (\ref{eq:curvature}) noch Beträge hinzu, dann spricht man von den starken Wolfe-Bedingungen. Wir verwenden jedoch die Variante ohne, denn die starken Wolfe-Bedingungen eignen sich nur für glatte Funktionen \cite{DBLP:journals/mp/LewisO13}.
+Die Bedingungen (\ref{eq:armijo}) und (\ref{eq:curvature}) zusammen nennt man die Wolfe-Bedingungen. Fügt man zur linken und rechten Seite der Bedingung (\ref{eq:curvature}) noch Beträge hinzu, dann spricht man von den starken Wolfe-Bedingungen. Wir verwenden jedoch die Variante ohne, denn die starken Wolfe-Bedingungen eignen sich nur für glatte Funktionen. \cite{DBLP:journals/mp/LewisO13}
 
 Ein recht einfacher und für nicht-glatte Funktionen geeigneter Algorithmus um einen Punkt zu finden, welcher die Bedingungen (\ref{eq:armijo}) und (\ref{eq:curvature}) erfüllt, ist \textbf{Algorithmus \ref{alg:linesearch}}. Beginnend mit der Schrittweite $\alpha=1$ verdoppelt er diese solange, bis ein Punkt gefunden wurde, der die Armijo-Bedingung verletzt. Dieser Wert für die Schrittweite wird dann als obere Schranke $v$ gesetzt. Daraufhin wird Bisektion verwendet, um im Intervall $(u,v)$ einen Punkt zu finden, der beide Bedingungen, (\ref{eq:armijo}) und (\ref{eq:curvature}), erfüllt. Immer wenn die Bedingung (\ref{eq:armijo}) verletzt ist, wird in der linken Intervallhälfte weitergesucht und wenn Bedingung (\ref{eq:curvature}) verletzt ist, dann in der rechten Hälfte.
 
@@ -336,7 +336,7 @@ Die Idee ist nun in Iteration $n$ die Zielfunktion $\mathcal{L}$ für ein festes
 \lambda_{ij}^{n+1} = \lambda_{ij}^n - c_{ij}(x_n)/\mu_n 
 \end{equation}
 berechnet.
-In Iteration $n+1$ wird dann erneut die Zielfunktion $\mathcal{L}$ minimiert, welche sich durch die neuen Werte für $\mu$ und den Vektor $\lambda^{n+1}$ verändert hat. Dabei wird die Lösung der Iteration $n$ als Ausgangspunkt benutzt.
+In Iteration $n+1$ wird dann erneut die Zielfunktion $\mathcal{L}$ minimiert, welche sich durch die neuen Werte für $\mu$ und den Vektor $\lambda^{n+1}$ verändert hat. Dabei wird die Lösung der Iteration $n$ als Ausgangspunkt benutzt. \cite{nocedal1999numerical}
 
 Für gewöhnlich ist $\mu$ Anfangs groß. Verletzungen der Nebenbedingungen werden also kaum bestraft. Dann wird $\mu$ immer kleiner, wodurch die Bestrafung der Nebenbedingungen zunimmt. Gleichzeitig nähern sich durch die Formel (\ref{eq:update_lagrange_mult}) die Werte des Vektors $\lambda$ den optimalen Lagrange-Multiplizierern an. Das führt dazu, dass die Verletzung der Nebenbedingungen letzendlich immer kleiner wird, bis eine gültige Lösung im Rahmen der gewünschten Genauigkeit gefunden wurde. Bezogen auf die Polygone heißt das, dass diese Anfangs gestapelt werden, um dann schrittweise wieder auseinander gezogen zu werden.
 
